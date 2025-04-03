@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { motion } from "framer-motion";
+import Viewer from "./Viewer";
+import { section } from "motion/react-client";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function CanvasApp() {
+  const [sections, setSections] = useState([
+    { id: 1, content: "# 섹션 1\n이곳에 내용을 입력하세요." }
+  ]);
+  const [activeSection, setActiveSection] = useState(1);
+
+  const updateContent = (id: number, newContent: string) => {
+    setSections(sections.map(sec => sec.id === id ? { ...sec, content: newContent } : sec));
+  };
+
+  const addSection = () => {
+    const newId = sections.length + 1;
+    setSections([...sections, { id: newId, content: `# 섹션 ${newId}\n새로운 내용을 입력하세요.` }]);
+    setActiveSection(newId);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex flex-col h-screen">
+      {/* 미리보기 섹션 */}
+      <div className="w-full aspect-video overflow-auto">
+        <Viewer md={sections.find(s => s.id === activeSection)?.content} width={window.innerWidth} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      
+      {/* 편집기 */}
+      <div className="flex-1 flex flex-col p-4 bg-gray-200">
+        <Textarea
+          className="flex-1 p-2 border rounded-md bg-white"
+          value={sections.find(s => s.id === activeSection)?.content || ""}
+          onChange={(e) => updateContent(activeSection, e.target.value)}
+        />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      
+      {/* 섹션 목록 */}
+      <div className="w-full overflow-x-auto flex bg-gray-100 p-2 border-t">
+        {sections.map(sec => (
+          <motion.div
+            key={sec.id}
+            className={`p-2 border rounded-md mx-1 cursor-pointer ${activeSection === sec.id ? 'bg-blue-300' : 'bg-white'}`}
+            onClick={() => setActiveSection(sec.id)}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Viewer md={sec.content} width={100} />
+          </motion.div>
+        ))}
+        <Button className="ml-2" onClick={addSection}>+</Button>
+      </div>
+    </div>
+  );
 }
-
-export default App

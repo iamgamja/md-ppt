@@ -1,7 +1,7 @@
 import shadow from 'react-shadow'
 import ReactMarkdown from "react-markdown";
 
-const DEFAULT_WIDTH = 1000
+const DEFAULT_WIDTH = 700
 
 export default function Viewer({ md, width }: { md?: string, width: number }) {
   return (
@@ -14,9 +14,10 @@ export default function Viewer({ md, width }: { md?: string, width: number }) {
       }}>
         <div
           style={{
-            position: 'absolute',
             aspectRatio: '16/9',
+            position: 'absolute',
             width: `${DEFAULT_WIDTH}px`,
+            padding: '20px',
             transformOrigin: 'top left',
             transform: `scale(${width / DEFAULT_WIDTH})`
           }}

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import Viewer from "./Viewer";
+import styles from './App.module.css'
 
 export default function CanvasApp() {
   const [sections, setSections] = useState([
@@ -41,7 +42,7 @@ export default function CanvasApp() {
         {sections.map(sec => (
           <motion.div
             key={sec.id}
-            className={`p-2 border rounded-md mx-1 cursor-pointer ${activeSection === sec.id ? 'bg-blue-300' : 'bg-white'}`}
+            className={`mx-2 p-1 border rounded-md bg-white ${activeSection === sec.id ? styles.selected : ''}`}
             onClick={() => setActiveSection(sec.id)}
             whileTap={{ scale: 0.9 }}
           >

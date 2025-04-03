@@ -28,7 +28,7 @@ export default function CanvasApp() {
         <Viewer md={sections.find(s => s.id === activeSection)?.content} width={window.innerWidth} />
       </div>
       
-      {/* 편집기 */}
+      {/* 마크다운 편집기 */}
       <div className="flex-1 flex flex-col p-4 bg-gray-200">
         <Textarea
           className="flex-1 p-2 border rounded-md bg-white"
@@ -36,9 +36,17 @@ export default function CanvasApp() {
           onChange={(e) => updateContent(activeSection, e.target.value)}
         />
       </div>
+
+      {/* 편집기 */}
+      <div className="flex justify-center p-4 bg-red-200">
+        <Button className="ml-2">&lt; left</Button>
+        <Button className="ml-2">+ Image</Button>
+        <Button className="ml-2">right &gt;</Button>
+        <Button className="ml-2" variant="destructive">delete</Button>
+      </div>
       
       {/* 섹션 목록 */}
-      <div className="w-full overflow-x-auto flex bg-gray-100 p-2 border-t">
+      <div className="w-full overflow-x-auto flex items-center bg-gray-100 p-2 border-t">
         {sections.map(sec => (
           <motion.div
             key={sec.id}

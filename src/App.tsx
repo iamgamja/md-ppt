@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import Viewer from "./Viewer";
-import { section } from "motion/react-client";
 
 export default function CanvasApp() {
   const [sections, setSections] = useState([

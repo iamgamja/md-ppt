@@ -5,6 +5,7 @@ export default function Viewer({md, width}: {md?: string, width: number}) {
     <div
       className="aspect-video"
       style={{
+        position: 'relative',
         width: `${width}px`
       }}
     >

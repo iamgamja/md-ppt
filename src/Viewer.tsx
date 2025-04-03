@@ -1,25 +1,29 @@
+import shadow from 'react-shadow'
 import ReactMarkdown from "react-markdown";
 
-export default function Viewer({md, width}: {md?: string, width: number}) {
+const DEFAULT_WIDTH = 1000
+
+export default function Viewer({ md, width }: { md?: string, width: number }) {
   return (
-    <div
-      className="aspect-video"
-      style={{
+    <shadow.div>
+      <link rel="stylesheet" href="https://unpkg.com/bamboo.css"></link>
+      <div style={{
+        aspectRatio: '16/9',
         position: 'relative',
         width: `${width}px`
-      }}
-    >
-      <div
-        className="aspect-video bg-red-200"
-        style={{
-          position: 'absolute',
-          width: '1920px',
-          transformOrigin: 'top left',
-          transform: `scale(${width / 1920})`
-        }}
-      >
-        <ReactMarkdown>{md}</ReactMarkdown>
+      }}>
+        <div
+          style={{
+            position: 'absolute',
+            aspectRatio: '16/9',
+            width: `${DEFAULT_WIDTH}px`,
+            transformOrigin: 'top left',
+            transform: `scale(${width / DEFAULT_WIDTH})`
+          }}
+        >
+          <ReactMarkdown>{md}</ReactMarkdown>
+        </div>
       </div>
-    </div>
-  )
+    </shadow.div>
+  );
 }

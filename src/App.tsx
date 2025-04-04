@@ -62,19 +62,18 @@ export default function CanvasApp() {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className="w-full overflow-x-auto flex items-center bg-gray-100 px-1 py-3 border-t"
+                className="w-full flex items-center bg-gray-100 px-2 py-3 space-x-2"
               >
                 {sections.map((sec, idx) => (
                   <Draggable key={sec.id} draggableId={sec.id.toString()} index={idx}>
                     {(provided) => (
                       <div
-                        key={sec.id}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
                         <motion.div
-                          className={`mx-2 p-1 border rounded-md bg-white ${activeSection === sec.id ? styles.selected : ''}`}
+                          className={`p-1 border rounded-md bg-white ${activeSection === sec.id ? styles.selected : ''}`}
                           onClick={() => setActiveSection(sec.id)}
                           whileTap={{ scale: 0.9 }}
                         >
@@ -84,7 +83,20 @@ export default function CanvasApp() {
                     )}
                   </Draggable>
                 ))}
-              <Button className="ml-2" onClick={addSection}>+</Button>
+                
+              {provided.placeholder}
+
+              <div>
+                <motion.div
+                  className={'p-1 border border-dashed rounded-md bg-gray-100'}
+                  onClick={addSection}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <div className="aspect-video w-[100px] flex flex-wrap justify-center content-center text-gray-500">
+                    <span>+</span>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           )}
           </Droppable>

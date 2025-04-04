@@ -18,7 +18,7 @@ export default function CanvasApp() {
   };
 
   const addSection = () => {
-    const newId = sections.length + 1;
+    const newId = sections.map(sec => sec.id).reduce((x,y) => x>y?x:y) + 1;
     setSections([...sections, { id: newId, content: `# 섹션 ${newId}\n새로운 내용을 입력하세요.` }]);
     setActiveSection(newId);
   };

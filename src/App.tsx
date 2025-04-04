@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea
 import Viewer from "./Viewer";
 import styles from './App.module.css'
 
-export default function CanvasApp() {
+export default function App() {
   const [sections, setSections] = useState([
     { id: 1, content: "# 섹션 1\n이곳에 내용을 입력하세요." }
   ]);

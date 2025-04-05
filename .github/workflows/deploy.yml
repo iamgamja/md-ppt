@@ -25,6 +25,8 @@ jobs:
         env:
           NODE_ENV: production
 
+      - run: ls .
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:

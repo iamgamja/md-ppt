@@ -1,17 +1,58 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Viewer from "./Viewer";
 import styles from './App.module.css'
 
+export type asset = {
+  content: string
+  size: number
+  position: [number, number]
+}
+
+type section = {
+  id: number
+  content: string
+  assets: asset[]
+}
+
+const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result!.toString());
+  reader.onerror = reject;
+});
+
 export default function App() {
-  const [sections, setSections] = useState([
-    { id: 1, content: "# 섹션 1\n이곳에 내용을 입력하세요." }
+  const [sections, setSections] = useState<section[]>([
+    {
+      id: 1,
+      content: "# 섹션 1\n이곳에 내용을 입력하세요.",
+      assets: []
+    }
   ]);
   const [activeSection, setActiveSection] = useState(1);
+
+  const addAsset = async (id: number, file?: File) => {
+    if (!file) return;
+
+    const base64 = await toBase64(file)
+    const asset: asset = {
+      content: base64,
+      size: 100,
+      position: [0,0]
+    }
+
+    setSections(sections.map(sec => (
+      sec.id === id
+      ? { ...sec, assets: [...sec.assets, asset] }
+      : sec
+    )))
+  }
 
   const updateContent = (id: number, newContent: string) => {
     setSections(sections.map(sec => sec.id === id ? { ...sec, content: newContent } : sec));
@@ -19,7 +60,7 @@ export default function App() {
 
   const addSection = () => {
     const newId = sections.map(sec => sec.id).reduce((x,y) => x>y?x:y) + 1;
-    setSections([...sections, { id: newId, content: `# 섹션 ${newId}\n새로운 내용을 입력하세요.` }]);
+    setSections([...sections, { id: newId, content: `# 섹션 ${newId}\n새로운 내용을 입력하세요.`, assets: [] }]);
     setActiveSection(newId);
   };
 
@@ -32,28 +73,45 @@ export default function App() {
     setSections(reorderedItems);
   };
 
+  const section = sections.find(s => s.id === activeSection)!
+
   return (
     <div className="flex flex-col h-screen">
       {/* 미리보기 섹션 */}
-      <div className="w-full aspect-video overflow-auto">
-        <Viewer md={sections.find(s => s.id === activeSection)?.content} width={window.innerWidth} />
+      <div className="aspect-video">
+        <Viewer md={section.content} width={window.innerWidth} assets={section.assets} />
       </div>
       
       {/* 마크다운 편집기 */}
-      <div className="flex-1 flex flex-col p-4 bg-gray-200">
-        <Textarea
-          className="flex-1 p-2 border rounded-md bg-white"
-          value={sections.find(s => s.id === activeSection)?.content || ""}
-          onChange={(e) => updateContent(activeSection, e.target.value)}
-        />
-      </div>
+      <Tabs defaultValue="markdown" className="flex-1 p-4 bg-gray-200 overflow-scroll">
+        <TabsList>
+          <TabsTrigger value="markdown">Markdown</TabsTrigger>
+          <TabsTrigger value="assets">Assets</TabsTrigger>
+        </TabsList>
 
-      {/* 편집기 */}
-      <div className="flex justify-center p-4 bg-red-200">
-        <Button className="ml-2">+ Image</Button>
-        <Button className="ml-2" variant="destructive">delete</Button>
-      </div>
-      
+        <TabsContent value="markdown" className="flex flex-col">
+          <Textarea
+            className="flex-1 p-2 border rounded-md bg-white"
+            value={section.content}
+            onChange={(e) => updateContent(activeSection, e.target.value)}
+          />
+        </TabsContent>
+
+        <TabsContent value="assets">
+          <div className="h-full rounded-md border p-2 space-y-2 bg-white">
+            <div className="flex flex-row-reverse">
+              <Input type="file" accept="image/*" onChange={e => (addAsset(activeSection, e.target.files?.[0]), e.target.value = '')} />
+            </div>
+
+            {section.assets.map((asset, idx) => (
+              <div key={idx} className="h-20 flex p-2 border rounded-md">
+                <img src={asset.content} className="aspect-square h-full object-contain" />
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
+
       {/* 섹션 목록 */}
       <ScrollArea>
         <DragDropContext onDragEnd={handleDragEnd}>
@@ -77,7 +135,7 @@ export default function App() {
                           onClick={() => setActiveSection(sec.id)}
                           whileTap={{ scale: 0.9 }}
                         >
-                          <Viewer md={sec.content} width={100} />
+                          <Viewer md={sec.content} width={100} assets={sec.assets} />
                         </motion.div>
                       </div>
                     )}

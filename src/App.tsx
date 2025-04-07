@@ -12,13 +12,7 @@ import { section } from "./types/section";
 import Viewer from "./Viewer";
 import styles from './App.module.css'
 import { BASIC_HEIGHT, BASIC_WIDTH } from "./constants/BASIC_SIZE";
-
-const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => resolve(reader.result!.toString());
-  reader.onerror = reject;
-});
+import { toBase64 } from "./utils/utils";
 
 export default function App() {
   const [sections, setSections] = useState<section[]>([

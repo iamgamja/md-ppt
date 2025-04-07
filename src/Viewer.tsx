@@ -1,8 +1,7 @@
 import shadow from 'react-shadow'
 import ReactMarkdown from "react-markdown";
-import { asset } from './App';
-
-const DEFAULT_WIDTH = 700
+import { asset } from './types/asset';
+import { BASIC_WIDTH } from './constants/BASIC_SIZE';
 
 export default function Viewer({ md, width, assets }: { md?: string, width: number, assets: asset[]}) {
   return (
@@ -11,16 +10,17 @@ export default function Viewer({ md, width, assets }: { md?: string, width: numb
       <div style={{
         aspectRatio: '16/9',
         position: 'relative',
-        width: `${width}px`
+        width: `${width}px`,
+        overflow: 'hidden'
       }}>
         <div
           style={{
             aspectRatio: '16/9',
             position: 'absolute',
-            width: `${DEFAULT_WIDTH}px`,
+            width: `${BASIC_WIDTH}px`,
             padding: '20px',
             transformOrigin: 'top left',
-            transform: `scale(${width / DEFAULT_WIDTH})`
+            transform: `scale(${width / BASIC_WIDTH})`
           }}
         >
           <ReactMarkdown>{md}</ReactMarkdown>

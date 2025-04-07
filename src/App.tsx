@@ -7,21 +7,11 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import { asset } from "./types/asset";
+import { section } from "./types/section";
 import Viewer from "./Viewer";
 import styles from './App.module.css'
-
-export type asset = {
-  content: string
-  size: number
-  x: number
-  y: number
-}
-
-type section = {
-  id: number
-  content: string
-  assets: asset[]
-}
+import { BASIC_HEIGHT, BASIC_WIDTH } from "./constants/BASIC_SIZE";
 
 const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
   const reader = new FileReader();
@@ -119,9 +109,9 @@ export default function App() {
               <div key={idx} className="h-20 flex p-2 border rounded-md">
                 <img src={asset.content} className="aspect-square h-full object-contain" />
                 <div className="h-full flex-1 flex flex-col justify-between">
-                  <Label>size <Slider min={0} max={700} value={[asset.size]} onValueChange={(e) => updateAsset(section.id, idx, 'size', e[0])} /></Label>
-                  <Label>x <Slider min={0} max={700} value={[asset.x]} onValueChange={(e) => updateAsset(section.id, idx, 'x', e[0])} /></Label>
-                  <Label>y <Slider min={0} max={700} value={[asset.y]} onValueChange={(e) => updateAsset(section.id, idx, 'y', e[0])} /></Label>
+                  <Label>size <Slider min={0} max={BASIC_WIDTH} value={[asset.size]} onValueChange={(e) => updateAsset(activeSection, idx, 'size', e[0])} /></Label>
+                  <Label>x <Slider min={0} max={BASIC_WIDTH} value={[asset.x]} onValueChange={(e) => updateAsset(activeSection, idx, 'x', e[0])} /></Label>
+                  <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[asset.y]} onValueChange={(e) => updateAsset(activeSection, idx, 'y', e[0])} /></Label>
                 </div>
               </div>
             ))}

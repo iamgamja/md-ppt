@@ -24,35 +24,34 @@ export default function App() {
   ]);
   const [activeSection, setActiveSection] = useState(1);
 
-  const addAsset = async (id: number, file?: File) => {
+  const updateContent = (id: number, content: string) => {
+    setSections(sections.map(sec => sec.id === id ? { ...sec, content } : sec));
+  }
+
+  const addAsset = (id: number, asset: asset) => {
+    setSections(sections.map(sec => sec.id === id ? { ...sec, assets: [...sec.assets, asset] } : sec));
+  }
+
+  const updateAsset = (id: number, idx: number, prop: 'size'|'x'|'y', value: number) => {
+    setSections(sections.map(sec => sec.id === id ? {
+      ...sec,
+      assets: sec.assets.map((asset, assetidx) => assetidx === idx ? {
+        ...asset,
+        [prop]: value
+      } : asset)
+    } : sec));
+  }
+
+  const addFile = async (id: number, file?: File) => {
     if (!file) return;
 
-    const base64 = await toBase64(file)
-    const asset: asset = {
-      content: base64,
+    addAsset(id, {
+      content: await toBase64(file),
       size: 100,
       x: 0,
       y: 0
-    }
-
-    setSections(sections.map(sec => (
-      sec.id === id
-      ? { ...sec, assets: [...sec.assets, asset] }
-      : sec
-    )))
+    })
   }
-
-  const updateAsset = (id: number, contentidx: number, prop: 'size'|'x'|'y', value: number) => {
-    const oldassets = sections.find(s => s.id === id)!.assets
-    const newassets = [...oldassets]
-    newassets[contentidx][prop] = value
-
-    setSections(sections.map(sec => sec.id === id ? { ...sec, assets: newassets } : sec));
-  }
-
-  const updateContent = (id: number, newContent: string) => {
-    setSections(sections.map(sec => sec.id === id ? { ...sec, content: newContent } : sec));
-  };
 
   const addSection = () => {
     const newId = sections.map(sec => sec.id).reduce((x,y) => x>y?x:y) + 1;
@@ -96,7 +95,7 @@ export default function App() {
         <TabsContent value="assets">
           <div className="h-full rounded-md border p-2 space-y-2 bg-white">
             <div className="flex flex-row-reverse">
-              <Input type="file" accept="image/*" onChange={e => (addAsset(activeSection, e.target.files?.[0]), e.target.value = '')} />
+              <Input type="file" accept="image/*" onChange={e => (addFile(activeSection, e.target.files?.[0]), e.target.value = '')} />
             </div>
 
             {section.assets.map((asset, idx) => (

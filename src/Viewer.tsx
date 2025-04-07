@@ -31,9 +31,9 @@ export default function Viewer({ md, width, assets }: { md?: string, width: numb
               src={asset.content}
               style={{
                 position: 'absolute',
-                width: `${asset.size}px`,
-                left: asset.position[0],
-                top: asset.position[1]
+                width: asset.size,
+                left: asset.x,
+                top: asset.y
               }}
             />
           ))}

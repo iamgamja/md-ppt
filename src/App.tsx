@@ -3,6 +3,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Viewer from "./Viewer";
@@ -11,7 +13,8 @@ import styles from './App.module.css'
 export type asset = {
   content: string
   size: number
-  position: [number, number]
+  x: number
+  y: number
 }
 
 type section = {
@@ -44,7 +47,8 @@ export default function App() {
     const asset: asset = {
       content: base64,
       size: 100,
-      position: [0,0]
+      x: 0,
+      y: 0
     }
 
     setSections(sections.map(sec => (
@@ -52,6 +56,14 @@ export default function App() {
       ? { ...sec, assets: [...sec.assets, asset] }
       : sec
     )))
+  }
+
+  const updateAsset = (id: number, contentidx: number, prop: 'size'|'x'|'y', value: number) => {
+    const oldassets = sections.find(s => s.id === id)!.assets
+    const newassets = [...oldassets]
+    newassets[contentidx][prop] = value
+
+    setSections(sections.map(sec => sec.id === id ? { ...sec, assets: newassets } : sec));
   }
 
   const updateContent = (id: number, newContent: string) => {
@@ -106,6 +118,11 @@ export default function App() {
             {section.assets.map((asset, idx) => (
               <div key={idx} className="h-20 flex p-2 border rounded-md">
                 <img src={asset.content} className="aspect-square h-full object-contain" />
+                <div className="h-full flex-1 flex flex-col justify-between">
+                  <Label>size <Slider min={0} max={700} value={[asset.size]} onValueChange={(e) => updateAsset(section.id, idx, 'size', e[0])} /></Label>
+                  <Label>x <Slider min={0} max={700} value={[asset.x]} onValueChange={(e) => updateAsset(section.id, idx, 'x', e[0])} /></Label>
+                  <Label>y <Slider min={0} max={700} value={[asset.y]} onValueChange={(e) => updateAsset(section.id, idx, 'y', e[0])} /></Label>
+                </div>
               </div>
             ))}
           </div>

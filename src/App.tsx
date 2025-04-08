@@ -32,7 +32,12 @@ export default function App() {
     setSections(sections.map(sec => sec.id === id ? { ...sec, assets: [...sec.assets, asset] } : sec));
   }
 
-  const updateAsset = (id: number, idx: number, prop: 'size'|'x'|'y', value: number) => {
+  const updateAsset = (id: number, idx: number, prop: 'size'|'x'|'y', value: number, magnet?: number) => {
+    if (typeof magnet === 'number') {
+      if (Math.abs(value - magnet) < 10)
+        value = magnet
+    }
+
     setSections(sections.map(sec => sec.id === id ? {
       ...sec,
       assets: sec.assets.map((asset, assetidx) => assetidx === idx ? {
@@ -103,8 +108,8 @@ export default function App() {
                 <img src={asset.content} className="aspect-square h-full object-contain" />
                 <div className="h-full flex-1 flex flex-col justify-between">
                   <Label>size <Slider min={0} max={BASIC_WIDTH} value={[asset.size]} onValueChange={(e) => updateAsset(activeSection, idx, 'size', e[0])} /></Label>
-                  <Label>x <Slider min={0} max={BASIC_WIDTH} value={[asset.x]} onValueChange={(e) => updateAsset(activeSection, idx, 'x', e[0])} /></Label>
-                  <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[asset.y]} onValueChange={(e) => updateAsset(activeSection, idx, 'y', e[0])} /></Label>
+                  <Label>x <Slider min={0} max={BASIC_WIDTH} value={[asset.x]} onValueChange={(e) => updateAsset(activeSection, idx, 'x', e[0], BASIC_WIDTH/2-asset.size/2)} /></Label>
+                  <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[asset.y]} onValueChange={(e) => updateAsset(activeSection, idx, 'y', e[0], BASIC_HEIGHT/2-asset.size/2)} /></Label>
                 </div>
               </div>
             ))}

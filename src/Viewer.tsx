@@ -31,6 +31,8 @@ export default function Viewer({ md, width, assets }: { md?: string, width: numb
               src={asset.content}
               style={{
                 position: 'absolute',
+                aspectRatio: '1 / 1',
+                objectFit: 'contain',
                 width: asset.size,
                 left: asset.x,
                 top: asset.y

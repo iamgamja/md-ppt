@@ -76,7 +76,7 @@ export default function App() {
   const section = sections.find(s => s.id === activeSection)!
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-dvh">
       {/* 미리보기 섹션 */}
       <div className="aspect-video">
         <Viewer md={section.content} width={window.innerWidth} assets={section.assets} />

@@ -99,7 +99,7 @@ export default function App() {
             </div>
 
             {section.assets.map((asset, idx) => (
-              <div key={idx} className="h-20 flex p-2 border rounded-md">
+              <div key={idx} className="h-20 flex p-2 border rounded-md space-x-2">
                 <img src={asset.content} className="aspect-square h-full object-contain" />
                 <div className="h-full flex-1 flex flex-col justify-between">
                   <Label>size <Slider min={0} max={BASIC_WIDTH} value={[asset.size]} onValueChange={(e) => updateAsset(activeSection, idx, 'size', e[0])} /></Label>

@@ -24,6 +24,8 @@ export default function App() {
   ]);
   const [activeSection, setActiveSection] = useState(1);
 
+  const [activeTab, setActiveTab] = useState("markdown")
+
   const updateContent = (id: number, content: string) => {
     setSections(sections.map(sec => sec.id === id ? { ...sec, content } : sec));
   }
@@ -62,7 +64,33 @@ export default function App() {
     const newId = sections.map(sec => sec.id).reduce((x,y) => x>y?x:y) + 1;
     setSections([...sections, { id: newId, content: `# 섹션 ${newId}\n새로운 내용을 입력하세요.`, assets: [] }]);
     setActiveSection(newId);
-  };
+  }
+
+  const copySection = (id: number) => {
+    const newId = sections.map(sec => sec.id).reduce((x,y) => x>y?x:y) + 1;
+    
+    const targetIdx = sections.findIndex(sec => sec.id === id)!
+    const target = sections.find(sec => sec.id === id)!
+    const newSection: section = {
+      id: newId,
+      content: target.content,
+      assets: target.assets.map(a => ({
+        ...a
+      }))
+    }
+
+    const newSections = [...sections]
+    newSections.splice(targetIdx+1, 0, newSection)
+    setSections(newSections)
+  }
+
+  const removeSection = (id: number) => {
+    const targetIdx = sections.findIndex(sec => sec.id === id)!
+    const newSections = [...sections]
+    newSections.splice(targetIdx, 1)
+
+    setSections(newSections)
+  }
 
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -83,10 +111,12 @@ export default function App() {
       </div>
       
       {/* 마크다운 편집기 */}
-      <Tabs defaultValue="markdown" className="flex-1 p-4 bg-gray-200 overflow-scroll">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 p-4 bg-gray-200 overflow-scroll">
         <TabsList>
-          <TabsTrigger value="markdown">Markdown</TabsTrigger>
+          <TabsTrigger className="default-tab" value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
+          <TabsTrigger value="tmp1" onClick={() => {copySection(activeSection); setActiveSection(prev => prev + 1); setActiveTab("markdown")}}>copy</TabsTrigger>
+          <TabsTrigger value="tmp2" className="bg-red-400" disabled={sections.length === 1} onClick={() => {removeSection(activeSection); setActiveSection(sections[0].id !== activeSection ? sections[0].id : sections[1].id); setActiveTab("markdown")}}>delete</TabsTrigger>
         </TabsList>
 
         <TabsContent value="markdown" className="flex flex-col">

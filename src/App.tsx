@@ -82,6 +82,7 @@ export default function App() {
     const newSections = [...sections]
     newSections.splice(targetIdx+1, 0, newSection)
     setSections(newSections)
+    setActiveSection(newId)
   }
 
   const removeSection = (id: number) => {
@@ -90,6 +91,7 @@ export default function App() {
     newSections.splice(targetIdx, 1)
 
     setSections(newSections)
+    setActiveSection(newSections[0].id)
   }
 
   const handleDragEnd = (result: DropResult) => {
@@ -115,8 +117,8 @@ export default function App() {
         <TabsList>
           <TabsTrigger className="default-tab" value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
-          <TabsTrigger value="tmp1" onClick={() => {copySection(activeSection); setActiveSection(prev => prev + 1); setActiveTab("markdown")}}>copy</TabsTrigger>
-          <TabsTrigger value="tmp2" className="bg-red-400" disabled={sections.length === 1} onClick={() => {removeSection(activeSection); setActiveSection(sections[0].id !== activeSection ? sections[0].id : sections[1].id); setActiveTab("markdown")}}>delete</TabsTrigger>
+          <TabsTrigger value="tmp1" onClick={() => {copySection(activeSection); setActiveTab("markdown")}}>copy</TabsTrigger>
+          <TabsTrigger value="tmp2" className="bg-red-400" disabled={sections.length === 1} onClick={() => {removeSection(activeSection); setActiveTab("markdown")}}>delete</TabsTrigger>
         </TabsList>
 
         <TabsContent value="markdown" className="flex flex-col">

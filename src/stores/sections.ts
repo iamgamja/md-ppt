@@ -1,5 +1,4 @@
 import { section } from "@/types/section"
-import { preconnect } from "react-dom"
 import { create } from "zustand"
 import { useAssetsStore } from "./assets"
 

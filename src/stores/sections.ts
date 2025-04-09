@@ -12,6 +12,7 @@ type SectionsStore = {
   remove: (id: number) => void
   updateContent: (id: number, content: string) => void
   addAsset: (id: number, assetid: number) => void
+  updateAssets: (id: number, assets: number[]) => void
 }
 
 export const useSectionsStore = create<SectionsStore>((set) => ({
@@ -73,6 +74,18 @@ export const useSectionsStore = create<SectionsStore>((set) => ({
             ...prev.sections[id].assets,
             assetid
           ]
+        }
+      }
+    }))
+  },
+
+  updateAssets(id, assets) {
+    set((prev) => ({
+      sections: {
+        ...prev.sections,
+        [id]: {
+          ...prev.sections[id],
+          assets
         }
       }
     }))

@@ -52,14 +52,23 @@ export default function App() {
     setActiveSection(newSections[0])
   }
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleSectionListDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const reorderedItems = [...sectionsArr];
     const [movedItem] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, movedItem);
     setSectionsArr(reorderedItems);
-  };
+  }
+
+  const handleAssetListDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const reorderedItems = [...nowsection.assets];
+    const [movedItem] = reorderedItems.splice(result.source.index, 1);
+    reorderedItems.splice(result.destination.index, 0, movedItem);
+    SectionsStore.updateAssets(activeSection, reorderedItems);
+  }
 
   const nowsection = SectionsStore.sections[activeSection]
 
@@ -93,24 +102,47 @@ export default function App() {
               <Input type="file" accept="image/*" onChange={e => (addFile(activeSection, e.target.files?.[0]), e.target.value = '')} />
             </div>
 
-            {nowsection.assets.map((asset, idx) => (
-              <div key={idx} className="h-20 flex p-2 border rounded-md space-x-2">
-                <img src={AssetsStore.assets[asset].content} className="aspect-square h-full object-contain" />
-                <div className="h-full flex-1 flex flex-col justify-between">
-                  <Label>size <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].size]} onValueChange={([size]) => AssetsStore.updateSize(asset, size)} /></Label>
-                  <Label>x <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].x]} onValueChange={([x]) => AssetsStore.updateX(asset, x)} /></Label>
-                  <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[AssetsStore.assets[asset].y]} onValueChange={([y]) => AssetsStore.updateY(asset, y)} /></Label>
-                </div>
-              </div>
-            ))}
+            <DragDropContext onDragEnd={handleAssetListDragEnd}>
+              <Droppable droppableId="asset-list">
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    {nowsection.assets.map((asset, idx) => (
+                      <Draggable key={asset} draggableId={asset.toString()} index={idx}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="h-20 flex p-2 border rounded-md space-x-2"
+                          >
+                            <img src={AssetsStore.assets[asset].content} className="aspect-square h-full object-contain" />
+                              <div className="h-full flex-1 flex flex-col justify-between">
+                                <Label>size <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].size]} onValueChange={([size]) => AssetsStore.updateSize(asset, size)} /></Label>
+                                <Label>x <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].x]} onValueChange={([x]) => AssetsStore.updateX(asset, x)} /></Label>
+                                <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[AssetsStore.assets[asset].y]} onValueChange={([y]) => AssetsStore.updateY(asset, y)} /></Label>
+                              </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+            
           </div>
         </TabsContent>
       </Tabs>
 
       {/* 섹션 목록 */}
       <ScrollArea>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="droppable-list" direction="horizontal">
+        <DragDropContext onDragEnd={handleSectionListDragEnd}>
+          <Droppable droppableId="section-list" direction="horizontal">
             {(provided) => (
               <div
                 ref={provided.innerRef}

@@ -13,6 +13,7 @@ import { BASIC_HEIGHT, BASIC_WIDTH } from "./constants/BASIC_SIZE";
 import { toBase64 } from "./utils/utils";
 import { useSectionsStore } from "./stores/sections";
 import { useAssetsStore } from "./stores/assets";
+import { Button } from "./components/ui/button";
 
 export default function App() {
   const SectionsStore = useSectionsStore()
@@ -50,6 +51,15 @@ export default function App() {
     newSections.splice(sectionsArr.indexOf(id), 1)
     setSectionsArr(newSections)
     setActiveSection(newSections[0])
+  }
+
+  const removeAsset = (assetid: number) => {
+    AssetsStore.remove(assetid)
+
+    SectionsStore.updateAssets(
+      activeSection,
+      nowsection.assets.filter(x => x !== assetid)
+    )
   }
 
   const handleSectionListDragEnd = (result: DropResult) => {
@@ -119,11 +129,14 @@ export default function App() {
                             className="h-20 flex p-2 border rounded-md space-x-2"
                           >
                             <img src={AssetsStore.assets[asset].content} className="aspect-square h-full object-contain" />
-                              <div className="h-full flex-1 flex flex-col justify-between">
-                                <Label>size <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].size]} onValueChange={([size]) => AssetsStore.updateSize(asset, size)} /></Label>
-                                <Label>x <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].x]} onValueChange={([x]) => AssetsStore.updateX(asset, x)} /></Label>
-                                <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[AssetsStore.assets[asset].y]} onValueChange={([y]) => AssetsStore.updateY(asset, y)} /></Label>
-                              </div>
+                            <div className="h-full flex-1 flex flex-col justify-between">
+                              <Label>size <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].size]} onValueChange={([size]) => AssetsStore.updateSize(asset, size)} /></Label>
+                              <Label>x <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].x]} onValueChange={([x]) => AssetsStore.updateX(asset, x)} /></Label>
+                              <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[AssetsStore.assets[asset].y]} onValueChange={([y]) => AssetsStore.updateY(asset, y)} /></Label>
+                            </div>
+                            <div>
+                              <Button variant="destructive" size="icon" onClick={() => removeAsset(asset)}>X</Button>
+                            </div>
                           </div>
                         )}
                       </Draggable>

@@ -7,109 +7,67 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
-import { asset } from "./types/asset";
-import { section } from "./types/section";
 import Viewer from "./Viewer";
 import styles from './App.module.css'
 import { BASIC_HEIGHT, BASIC_WIDTH } from "./constants/BASIC_SIZE";
 import { toBase64 } from "./utils/utils";
+import { useSectionsStore } from "./stores/sections";
+import { useAssetsStore } from "./stores/assets";
 
 export default function App() {
-  const [sections, setSections] = useState<section[]>([
-    {
-      id: 1,
-      content: "# 섹션 1\n이곳에 내용을 입력하세요.",
-      assets: []
-    }
-  ]);
-  const [activeSection, setActiveSection] = useState(1);
-
+  const SectionsStore = useSectionsStore()
+  const AssetsStore = useAssetsStore()
+  const [sectionsArr, setSectionsArr] = useState([1])
+  const [activeSection, setActiveSection] = useState(1)
   const [activeTab, setActiveTab] = useState("markdown")
-
-  const updateContent = (id: number, content: string) => {
-    setSections(sections.map(sec => sec.id === id ? { ...sec, content } : sec));
-  }
-
-  const addAsset = (id: number, asset: asset) => {
-    setSections(sections.map(sec => sec.id === id ? { ...sec, assets: [...sec.assets, asset] } : sec));
-  }
-
-  const updateAsset = (id: number, idx: number, prop: 'size'|'x'|'y', value: number, magnet?: number) => {
-    if (typeof magnet === 'number') {
-      if (Math.abs(value - magnet) < 10)
-        value = magnet
-    }
-
-    setSections(sections.map(sec => sec.id === id ? {
-      ...sec,
-      assets: sec.assets.map((asset, assetidx) => assetidx === idx ? {
-        ...asset,
-        [prop]: value
-      } : asset)
-    } : sec));
-  }
 
   const addFile = async (id: number, file?: File) => {
     if (!file) return;
+    const assetid = AssetsStore.add(await toBase64(file))
 
-    addAsset(id, {
-      content: await toBase64(file),
-      size: 100,
-      x: 0,
-      y: 0
-    })
+    SectionsStore.addAsset(id, assetid)
   }
 
   const addSection = () => {
-    const newId = sections.map(sec => sec.id).reduce((x,y) => x>y?x:y) + 1;
-    setSections([...sections, { id: newId, content: `# 섹션 ${newId}\n새로운 내용을 입력하세요.`, assets: [] }]);
-    setActiveSection(newId);
+    const res = SectionsStore.add()
+    setSectionsArr([ ...sectionsArr, res ])
+    setActiveSection(res)
   }
 
   const copySection = (id: number) => {
-    const newId = sections.map(sec => sec.id).reduce((x,y) => x>y?x:y) + 1;
-    
-    const targetIdx = sections.findIndex(sec => sec.id === id)!
-    const target = sections.find(sec => sec.id === id)!
-    const newSection: section = {
-      id: newId,
-      content: target.content,
-      assets: target.assets.map(a => ({
-        ...a
-      }))
-    }
+    const res = SectionsStore.copy(id)
 
-    const newSections = [...sections]
-    newSections.splice(targetIdx+1, 0, newSection)
-    setSections(newSections)
-    setActiveSection(newId)
+    const newSections = [...sectionsArr]
+    newSections.splice(sectionsArr.indexOf(id)+1, 0, res)
+    setSectionsArr(newSections)
+    setActiveSection(res)
   }
 
   const removeSection = (id: number) => {
-    const targetIdx = sections.findIndex(sec => sec.id === id)!
-    const newSections = [...sections]
-    newSections.splice(targetIdx, 1)
+    SectionsStore.remove(id)
 
-    setSections(newSections)
-    setActiveSection(newSections[0].id)
+    const newSections = [...sectionsArr]
+    newSections.splice(sectionsArr.indexOf(id), 1)
+    setSectionsArr(newSections)
+    setActiveSection(newSections[0])
   }
 
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    const reorderedItems = [...sections];
+    const reorderedItems = [...sectionsArr];
     const [movedItem] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, movedItem);
-    setSections(reorderedItems);
+    setSectionsArr(reorderedItems);
   };
 
-  const section = sections.find(s => s.id === activeSection)!
+  const nowsection = SectionsStore.sections[activeSection]
 
   return (
     <div className="flex flex-col h-dvh">
       {/* 미리보기 섹션 */}
       <div className="aspect-video">
-        <Viewer md={section.content} width={window.innerWidth} assets={section.assets} />
+        <Viewer md={nowsection.content} width={window.innerWidth} assets={nowsection.assets} />
       </div>
       
       {/* 마크다운 편집기 */}
@@ -118,14 +76,14 @@ export default function App() {
           <TabsTrigger className="default-tab" value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
           <TabsTrigger value="tmp1" onClick={() => {copySection(activeSection); setActiveTab("markdown")}}>copy</TabsTrigger>
-          <TabsTrigger value="tmp2" className="bg-red-400" disabled={sections.length === 1} onClick={() => {removeSection(activeSection); setActiveTab("markdown")}}>delete</TabsTrigger>
+          <TabsTrigger value="tmp2" className="bg-red-400" disabled={sectionsArr.length === 1} onClick={() => {removeSection(activeSection); setActiveTab("markdown")}}>delete</TabsTrigger>
         </TabsList>
 
         <TabsContent value="markdown" className="flex flex-col">
           <Textarea
             className="flex-1 p-2 border rounded-md bg-white"
-            value={section.content}
-            onChange={(e) => updateContent(activeSection, e.target.value)}
+            value={nowsection.content}
+            onChange={(e) => SectionsStore.updateContent(activeSection, e.target.value)}
           />
         </TabsContent>
 
@@ -135,13 +93,13 @@ export default function App() {
               <Input type="file" accept="image/*" onChange={e => (addFile(activeSection, e.target.files?.[0]), e.target.value = '')} />
             </div>
 
-            {section.assets.map((asset, idx) => (
+            {nowsection.assets.map((asset, idx) => (
               <div key={idx} className="h-20 flex p-2 border rounded-md space-x-2">
-                <img src={asset.content} className="aspect-square h-full object-contain" />
+                <img src={AssetsStore.assets[asset].content} className="aspect-square h-full object-contain" />
                 <div className="h-full flex-1 flex flex-col justify-between">
-                  <Label>size <Slider min={0} max={BASIC_WIDTH} value={[asset.size]} onValueChange={(e) => updateAsset(activeSection, idx, 'size', e[0])} /></Label>
-                  <Label>x <Slider min={0} max={BASIC_WIDTH} value={[asset.x]} onValueChange={(e) => updateAsset(activeSection, idx, 'x', e[0], BASIC_WIDTH/2-asset.size/2)} /></Label>
-                  <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[asset.y]} onValueChange={(e) => updateAsset(activeSection, idx, 'y', e[0], BASIC_HEIGHT/2-asset.size/2)} /></Label>
+                  <Label>size <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].size]} onValueChange={([size]) => AssetsStore.updateSize(asset, size)} /></Label>
+                  <Label>x <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].x]} onValueChange={([x]) => AssetsStore.updateX(asset, x)} /></Label>
+                  <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[AssetsStore.assets[asset].y]} onValueChange={([y]) => AssetsStore.updateY(asset, y)} /></Label>
                 </div>
               </div>
             ))}
@@ -159,8 +117,8 @@ export default function App() {
                 {...provided.droppableProps}
                 className="w-full flex items-center bg-gray-100 px-2 py-3 space-x-2"
               >
-                {sections.map((sec, idx) => (
-                  <Draggable key={sec.id} draggableId={sec.id.toString()} index={idx}>
+                {sectionsArr.map((sec, idx) => (
+                  <Draggable key={sec} draggableId={sec.toString()} index={idx}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
@@ -168,11 +126,11 @@ export default function App() {
                         {...provided.dragHandleProps}
                       >
                         <motion.div
-                          className={`p-1 border rounded-md bg-white ${activeSection === sec.id ? styles.selected : ''}`}
-                          onClick={() => setActiveSection(sec.id)}
+                          className={`p-1 border rounded-md bg-white ${activeSection === sec ? styles.selected : ''}`}
+                          onClick={() => setActiveSection(sec)}
                           whileTap={{ scale: 0.9 }}
                         >
-                          <Viewer md={sec.content} width={100} assets={sec.assets} />
+                          <Viewer md={SectionsStore.sections[sec].content} width={100} assets={SectionsStore.sections[sec].assets} />
                         </motion.div>
                       </div>
                     )}

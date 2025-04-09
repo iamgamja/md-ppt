@@ -1,9 +1,10 @@
 import shadow from 'react-shadow'
 import ReactMarkdown from "react-markdown";
-import { asset } from './types/asset';
 import { BASIC_WIDTH } from './constants/BASIC_SIZE';
+import { useAssetsStore } from './stores/assets';
 
-export default function Viewer({ md, width, assets }: { md?: string, width: number, assets: asset[]}) {
+export default function Viewer({ md, width, assets }: { md?: string, width: number, assets: number[]}) {
+  const AssetsStore = useAssetsStore()
   return (
     <shadow.div>
       <link rel="stylesheet" href="https://unpkg.com/bamboo.css"></link>
@@ -28,14 +29,14 @@ export default function Viewer({ md, width, assets }: { md?: string, width: numb
           {assets.map((asset, idx) => (
             <img
               key={idx}
-              src={asset.content}
+              src={AssetsStore.assets[asset].content}
               style={{
                 position: 'absolute',
                 aspectRatio: '1 / 1',
                 objectFit: 'contain',
-                width: asset.size,
-                left: asset.x,
-                top: asset.y
+                width: AssetsStore.assets[asset].size,
+                left: AssetsStore.assets[asset].x,
+                top: AssetsStore.assets[asset].y
               }}
             />
           ))}

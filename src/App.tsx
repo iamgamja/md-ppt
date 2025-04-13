@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverTrigger, PopoverContent } from "./components/ui/popover";
 import { motion } from "framer-motion";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Viewer from "./Viewer";
@@ -138,8 +139,34 @@ export default function App() {
                                 <Label>x <Slider min={0} max={BASIC_WIDTH} value={[AssetsStore.assets[asset].x]} onValueChange={([x]) => AssetsStore.updateX(asset, Math.abs(x-magnetX) < 20 ? magnetX : x)} /></Label>
                                 <Label>y <Slider min={0} max={BASIC_HEIGHT} value={[AssetsStore.assets[asset].y]} onValueChange={([y]) => AssetsStore.updateY(asset, Math.abs(y-magnetY) < 20 ? magnetY : y)} /></Label>
                               </div>
-                              <div>
-                                <Button variant="destructive" size="icon" onClick={() => removeAsset(asset)}>X</Button>
+                              <div className="flex flex-col justify-between">
+                                <Button variant="destructive" className="w-7 h-7" onClick={() => removeAsset(asset)}>X</Button>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button variant='outline' className="w-7 h-7">ani</Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="">
+                                    <div className="grid gap-4">
+                                      <div className="space-y-2">
+                                        <h4 className="font-medium leading-none">Animations</h4>
+                                      </div>
+                                      <div className="grid gap-2">
+                                        <Label className="grid grid-cols-3 items-center gap-4">
+                                          Type
+                                          <Input className="col-span-2 h-8"/>
+                                        </Label>
+                                        <Label className="grid grid-cols-3 items-center gap-4">
+                                          Type
+                                          <Input className="col-span-2 h-8"/>
+                                        </Label>
+                                        <Label className="grid grid-cols-3 items-center gap-4">
+                                          Type
+                                          <Input className="col-span-2 h-8"/>
+                                        </Label>
+                                      </div>
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
                               </div>
                             </div>
                           )}

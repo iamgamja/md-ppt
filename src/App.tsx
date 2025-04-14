@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -11,65 +10,23 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea
 import Viewer from "./Viewer";
 import styles from './App.module.css'
 import { BASIC_HEIGHT, BASIC_WIDTH } from "./constants/BASIC_SIZE";
-import { toBase64 } from "./utils/utils";
 import { useSectionsStore } from "./stores/sections";
 import { useAssetsStore } from "./stores/assets";
 import { Button } from "./components/ui/button";
+import { usePageSettingStore } from "./stores/pageSetting";
 
 export default function App() {
   const SectionsStore = useSectionsStore()
   const AssetsStore = useAssetsStore()
-  const [sectionsArr, setSectionsArr] = useState([1])
-  const [activeSection, setActiveSection] = useState(1)
-  const [activeTab, setActiveTab] = useState("markdown")
-
-  const addFile = async (id: number, file?: File) => {
-    if (!file) return;
-    const assetid = AssetsStore.add(await toBase64(file))
-
-    SectionsStore.addAsset(id, assetid)
-  }
-
-  const addSection = () => {
-    const res = SectionsStore.add()
-    setSectionsArr([ ...sectionsArr, res ])
-    setActiveSection(res)
-  }
-
-  const copySection = (id: number) => {
-    const res = SectionsStore.copy(id)
-
-    const newSections = [...sectionsArr]
-    newSections.splice(sectionsArr.indexOf(id)+1, 0, res)
-    setSectionsArr(newSections)
-    setActiveSection(res)
-  }
-
-  const removeSection = (id: number) => {
-    SectionsStore.remove(id)
-
-    const newSections = [...sectionsArr]
-    newSections.splice(sectionsArr.indexOf(id), 1)
-    setSectionsArr(newSections)
-    setActiveSection(newSections[0])
-  }
-
-  const removeAsset = (assetid: number) => {
-    AssetsStore.remove(assetid)
-
-    SectionsStore.updateAssets(
-      activeSection,
-      nowsection.assets.filter(x => x !== assetid)
-    )
-  }
+  const { sectionsList, activeSection, activeTab, setSectionsList, setActiveSection, setActiveTab, addFile, addSection, copySection, removeSection, removeAsset } = usePageSettingStore()
 
   const handleSectionListDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    const reorderedItems = [...sectionsArr];
+    const reorderedItems = [...sectionsList];
     const [movedItem] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, movedItem);
-    setSectionsArr(reorderedItems);
+    setSectionsList(reorderedItems);
   }
 
   const handleAssetListDragEnd = (result: DropResult) => {
@@ -96,7 +53,7 @@ export default function App() {
           <TabsTrigger className="default-tab" value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
           <TabsTrigger value="tmp1" onClick={() => {copySection(activeSection); setActiveTab("markdown")}}>copy</TabsTrigger>
-          <TabsTrigger value="tmp2" className="bg-red-400" disabled={sectionsArr.length === 1} onClick={() => {removeSection(activeSection); setActiveTab("markdown")}}>delete</TabsTrigger>
+          <TabsTrigger value="tmp2" className="bg-red-400" disabled={sectionsList.length === 1} onClick={() => {removeSection(activeSection); setActiveTab("markdown")}}>delete</TabsTrigger>
         </TabsList>
 
         <TabsContent value="markdown" className="flex flex-col">
@@ -186,7 +143,7 @@ export default function App() {
                 {...provided.droppableProps}
                 className="w-full flex items-center bg-gray-100 px-2 py-3 space-x-2"
               >
-                {sectionsArr.map((sec, idx) => (
+                {sectionsList.map((sec, idx) => (
                   <Draggable key={sec} draggableId={sec.toString()} index={idx}>
                     {(provided) => (
                       <div

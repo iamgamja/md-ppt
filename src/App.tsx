@@ -151,18 +151,11 @@ export default function App() {
                                         <h4 className="font-medium leading-none">Animations</h4>
                                       </div>
                                       <div className="grid gap-2">
-                                        <Label className="grid grid-cols-3 items-center gap-4">
+                                        <p>🛠️ Work in Progress...</p>
+                                        {/* <Label className="grid grid-cols-3 items-center gap-4">
                                           Type
                                           <Input className="col-span-2 h-8"/>
-                                        </Label>
-                                        <Label className="grid grid-cols-3 items-center gap-4">
-                                          Type
-                                          <Input className="col-span-2 h-8"/>
-                                        </Label>
-                                        <Label className="grid grid-cols-3 items-center gap-4">
-                                          Type
-                                          <Input className="col-span-2 h-8"/>
-                                        </Label>
+                                        </Label> */}
                                       </div>
                                     </div>
                                   </PopoverContent>

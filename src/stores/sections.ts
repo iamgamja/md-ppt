@@ -52,6 +52,10 @@ export const useSectionsStore = create<SectionsStore>()(
         return newid
       },
       remove(id) {
+        get().sections[id].assets.forEach((assetid) => {
+          useAssetsStore.getState().remove(assetid)
+        })
+        
         set((prev) => {
           const newSections = { ...prev.sections }
           delete newSections[id]

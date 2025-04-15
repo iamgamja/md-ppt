@@ -2,9 +2,14 @@ import shadow from 'react-shadow'
 import ReactMarkdown from "react-markdown";
 import { BASIC_WIDTH } from './constants/BASIC_SIZE';
 import { useAssetsStore } from './stores/assets';
+import { useSectionsStore } from './stores/sections';
 
-export default function Viewer({ md, width, assets }: { md?: string, width: number, assets: number[]}) {
+export default function Viewer({ id, width }: { id: number, width: number}) {
+  const { sections } = useSectionsStore()
   const AssetsStore = useAssetsStore()
+
+  const assets = sections[id].assets
+
   return (
     <shadow.div>
       <link rel="stylesheet" href="https://unpkg.com/bamboo.css"></link>
@@ -24,7 +29,7 @@ export default function Viewer({ md, width, assets }: { md?: string, width: numb
             transform: `scale(${width / BASIC_WIDTH})`
           }}
         >
-          <ReactMarkdown>{md}</ReactMarkdown>
+          <ReactMarkdown>{sections[id].content}</ReactMarkdown>
         
           {assets.map((asset, idx) => (
             <img

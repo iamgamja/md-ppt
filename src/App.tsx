@@ -44,7 +44,7 @@ export default function App() {
     <div className="flex flex-col h-dvh">
       {/* 미리보기 섹션 */}
       <div className="aspect-video">
-        <Viewer md={nowsection.content} width={window.innerWidth} assets={nowsection.assets} />
+        <Viewer id={activeSection} width={window.innerWidth} />
       </div>
       
       {/* 마크다운 편집기 */}
@@ -156,7 +156,7 @@ export default function App() {
                           onClick={() => setActiveSection(sec)}
                           whileTap={{ scale: 0.9 }}
                         >
-                          <Viewer md={SectionsStore.sections[sec].content} width={100} assets={SectionsStore.sections[sec].assets} />
+                          <Viewer id={sec} width={100} />
                         </motion.div>
                       </div>
                     )}

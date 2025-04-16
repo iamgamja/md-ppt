@@ -60,7 +60,7 @@ export default function App() {
         <TabsList>
           <TabsTrigger className="default-tab" value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
-          <TabsTrigger value="tmp1" onClick={() => {copySection(activeSection); setActiveTab("markdown")}}>copy</TabsTrigger>
+          <TabsTrigger value="tmp1" className="bg-blue-300" onClick={() => {copySection(activeSection); setActiveTab("markdown")}}>copy</TabsTrigger>
           <TabsTrigger value="tmp2" className="bg-red-400" disabled={sectionsList.length === 1} onClick={() => {removeSection(activeSection); setActiveTab("markdown")}}>delete</TabsTrigger>
         </TabsList>
 

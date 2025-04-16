@@ -14,6 +14,7 @@ import { useSectionsStore } from "./stores/sections";
 import { useAssetsStore } from "./stores/assets";
 import { Button } from "./components/ui/button";
 import { usePageSettingStore } from "./stores/pageSetting";
+import { exportStores, importStores } from "./utils/fileSave";
 
 export default function App() {
   const SectionsStore = useSectionsStore()
@@ -36,6 +37,13 @@ export default function App() {
     const [movedItem] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, movedItem);
     SectionsStore.updateAssets(activeSection, reorderedItems);
+  }
+
+  const resetStores = () => {
+    useSectionsStore.persist.clearStorage()
+    useAssetsStore.persist.clearStorage()
+    usePageSettingStore.persist.clearStorage()
+    window.location.reload()
   }
 
   const nowsection = SectionsStore.sections[activeSection]
@@ -102,7 +110,7 @@ export default function App() {
                                   <PopoverTrigger asChild>
                                     <Button variant='outline' className="w-7 h-7">ani</Button>
                                   </PopoverTrigger>
-                                  <PopoverContent className="">
+                                  <PopoverContent>
                                     <div className="grid gap-4">
                                       <div className="space-y-2">
                                         <h4 className="font-medium leading-none">Animations</h4>
@@ -175,6 +183,51 @@ export default function App() {
                     <span>+</span>
                   </div>
                 </motion.div>
+              </div>
+
+              <div>
+                <Popover>
+                  <PopoverTrigger>
+                    <motion.div
+                      className={'p-1 border border-dashed rounded-md bg-blue-300'}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <div className="aspect-video w-[100px] flex flex-wrap justify-center content-center text-gray-800">
+                        <span>Project</span>
+                      </div>
+                    </motion.div>
+                  </PopoverTrigger>
+
+                  <PopoverContent>
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium leading-none">Project</h4>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label className="grid grid-cols-3 items-center gap-4">
+                          Import
+                          <Input type="file" onChange={e => (importStores(e.target.files?.[0]))} className="col-span-2 h-8" />
+                        </Label>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label className="grid grid-cols-3 items-center gap-4">
+                          Export
+                          <Button onClick={exportStores} className="col-span-2 h-8">
+                            click!
+                          </Button>
+                        </Label>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label className="grid grid-cols-3 items-center gap-4">
+                          Reset
+                          <Button variant="destructive" onClick={resetStores} className="col-span-2 h-8">
+                            click!
+                          </Button>
+                        </Label>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           )}

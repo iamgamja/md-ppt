@@ -33,7 +33,18 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
   return (
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
       <shadow.div>
-        <style>@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');</style>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+          center {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
+        `}</style>
         <link rel="stylesheet" href="https://unpkg.com/bamboo.css"></link>
         <div
           style={{

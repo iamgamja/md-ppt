@@ -15,11 +15,14 @@ import { useAssetsStore } from "./stores/assets";
 import { Button } from "./components/ui/button";
 import { usePageSettingStore } from "./stores/pageSetting";
 import { exportStores, importStores } from "./utils/fileSave";
+import { exportPDF } from "./utils/exportPDF";
+import { useState } from "react";
 
 export default function App() {
   const SectionsStore = useSectionsStore()
   const AssetsStore = useAssetsStore()
   const { sectionsList, activeSection, activeTab, setSectionsList, setActiveSection, setActiveTab, addFile, addSection, copySection, removeSection, removeAsset } = usePageSettingStore()
+  const [isExportingPDF, setIsExportingPDF] = useState(false)
 
   const handleSectionListDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -219,6 +222,14 @@ export default function App() {
                       </div>
                       <div className="grid gap-2">
                         <Label className="grid grid-cols-3 items-center gap-4">
+                          Export to PDF
+                          <Button disabled={isExportingPDF} onClick={async () => { setIsExportingPDF(true); await exportPDF(); setIsExportingPDF(false) }} className="col-span-2 h-8">
+                            click!
+                          </Button>
+                        </Label>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label className="grid grid-cols-3 items-center gap-4">
                           Reset
                           <Button variant="destructive" onClick={resetStores} className="col-span-2 h-8">
                             click!
@@ -235,6 +246,15 @@ export default function App() {
         </DragDropContext>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+
+      {/* pdf export sections */}
+      <div className="absolute -left-9999">
+        {sectionsList.map((id, idx) => (
+          <div key={idx} className="pdf-section">
+            <Viewer id={id} width={1980} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

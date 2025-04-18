@@ -12,6 +12,9 @@ export default function Viewer({ id, width }: { id: number, width: number}) {
 
   return (
     <shadow.div>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+      </style>
       <link rel="stylesheet" href="https://unpkg.com/bamboo.css"></link>
       <div style={{
         aspectRatio: '16/9',
@@ -26,7 +29,8 @@ export default function Viewer({ id, width }: { id: number, width: number}) {
             width: `${BASIC_WIDTH}px`,
             padding: '20px',
             transformOrigin: 'top left',
-            transform: `scale(${width / BASIC_WIDTH})`
+            transform: `scale(${width / BASIC_WIDTH})`,
+            fontFamily: '"Noto Sans KR", sans-serif',
           }}
         >
           <ReactMarkdown>{sections[id].content}</ReactMarkdown>

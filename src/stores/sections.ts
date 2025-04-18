@@ -1,7 +1,7 @@
-import { section } from "@/types/section"
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
-import { useAssetsStore } from "./assets"
+import { section } from '@/types/section'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { useAssetsStore } from './assets'
 
 type SectionsStore = {
   getNextId: () => number
@@ -19,20 +19,24 @@ export const useSectionsStore = create<SectionsStore>()(
   persist(
     (set, get) => ({
       getNextId() {
-        return Object.keys(get().sections).map(Number).reduce((x,y) => x>y?x:y, 0) + 1
+        return (
+          Object.keys(get().sections)
+            .map(Number)
+            .reduce((x, y) => (x > y ? x : y), 0) + 1
+        )
       },
-    
-      sections: { 1: { content: "# title", assets: [] } },
+
+      sections: { 1: { content: '# title', assets: [] } },
       add() {
         const newid = get().getNextId()
         set((prev) => ({
           sections: {
             ...prev.sections,
             [newid]: {
-              content: "# title",
+              content: '# title',
               assets: [],
-            }
-          }
+            },
+          },
         }))
         return newid
       },
@@ -43,11 +47,9 @@ export const useSectionsStore = create<SectionsStore>()(
             ...prev.sections,
             [newid]: {
               ...prev.sections[id],
-              assets: prev.sections[id].assets.map((assetid) => (
-                useAssetsStore.getState().copy(assetid)
-              ))
-            }
-          }
+              assets: prev.sections[id].assets.map((assetid) => useAssetsStore.getState().copy(assetid)),
+            },
+          },
         }))
         return newid
       },
@@ -55,23 +57,23 @@ export const useSectionsStore = create<SectionsStore>()(
         get().sections[id].assets.forEach((assetid) => {
           useAssetsStore.getState().remove(assetid)
         })
-        
+
         set((prev) => {
           const newSections = { ...prev.sections }
           delete newSections[id]
           return { sections: newSections }
         })
       },
-      
+
       updateContent(id, content) {
         set((prev) => ({
           sections: {
             ...prev.sections,
             [id]: {
               ...prev.sections[id],
-              content
-            }
-          }
+              content,
+            },
+          },
         }))
       },
       addAsset(id, assetid) {
@@ -80,30 +82,27 @@ export const useSectionsStore = create<SectionsStore>()(
             ...prev.sections,
             [id]: {
               ...prev.sections[id],
-              assets: [
-                ...prev.sections[id].assets,
-                assetid
-              ]
-            }
-          }
+              assets: [...prev.sections[id].assets, assetid],
+            },
+          },
         }))
       },
-    
+
       updateAssets(id, assets) {
         set((prev) => ({
           sections: {
             ...prev.sections,
             [id]: {
               ...prev.sections[id],
-              assets
-            }
-          }
+              assets,
+            },
+          },
         }))
       },
     }),
     {
       name: 'sections-store',
       version: 0,
-    }
-  )
+    },
+  ),
 )

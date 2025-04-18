@@ -1,12 +1,12 @@
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel"
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import Fade from 'embla-carousel-fade'
-import { usePageSettingStore } from "./stores/pageSetting"
-import Viewer from "./Viewer"
-import { useEffect, useState } from "react"
+import { usePageSettingStore } from './stores/pageSetting'
+import Viewer from './Viewer'
+import { useEffect, useState } from 'react'
 
 export default function Presentation() {
   const { sectionsList } = usePageSettingStore()
-  
+
   const [api, setApi] = useState<CarouselApi>()
 
   useEffect(() => {
@@ -15,12 +15,12 @@ export default function Presentation() {
       if (e.key === 'ArrowRight') api?.scrollNext()
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [api])
 
   return (
-    <Carousel plugins={[ Fade() ]} setApi={setApi}>
+    <Carousel plugins={[Fade()]} setApi={setApi}>
       <CarouselContent>
         {sectionsList.map((id, idx) => (
           <CarouselItem className="border" key={idx}>

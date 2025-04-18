@@ -20,7 +20,7 @@ export function exportStores() {
 
 export function importStores(file?: File) {
   if (!file) return
-  
+
   const reader = new FileReader()
 
   reader.onload = (event) => {

@@ -18,7 +18,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   static getDerivedStateFromError(): State {
     return { hasError: true }
   }
-  
+
   componentDidUpdate(prevProps: Props) {
     // resetKey가 바뀌면 상태 초기화
     if (prevProps.children !== this.props.children && this.state.hasError) {

@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware'
 type AssetsStore = {
   getNextId: () => number
 
-  assets: {[id: number]: asset}
+  assets: { [id: number]: asset }
   add: (content: string) => number
   copy: (id: number) => number
   remove: (id: number) => void
@@ -13,16 +13,19 @@ type AssetsStore = {
   updateSize: (id: number, size: number) => void
   updateX: (id: number, x: number) => void
   updateY: (id: number, y: number) => void
-
 }
 
 export const useAssetsStore = create<AssetsStore>()(
   persist(
     (set, get) => ({
       getNextId() {
-        return Object.keys(get().assets).map(Number).reduce((x,y) => x>y?x:y, 0) + 1
+        return (
+          Object.keys(get().assets)
+            .map(Number)
+            .reduce((x, y) => (x > y ? x : y), 0) + 1
+        )
       },
-    
+
       assets: {},
       add(content) {
         const newid = get().getNextId()
@@ -34,8 +37,8 @@ export const useAssetsStore = create<AssetsStore>()(
               size: 100,
               x: 0,
               y: 0,
-            }
-          }
+            },
+          },
         }))
         return newid
       },
@@ -45,9 +48,9 @@ export const useAssetsStore = create<AssetsStore>()(
           assets: {
             ...prev.assets,
             [newid]: {
-              ...prev.assets[id]
-            }
-          }
+              ...prev.assets[id],
+            },
+          },
         }))
         return newid
       },
@@ -58,17 +61,16 @@ export const useAssetsStore = create<AssetsStore>()(
           return { assets: newAssets }
         })
       },
-    
-      
+
       updateSize(id, size) {
         set((prev) => ({
           assets: {
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              size
-            }
-          }
+              size,
+            },
+          },
         }))
       },
       updateX(id, x) {
@@ -77,9 +79,9 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              x
-            }
-          }
+              x,
+            },
+          },
         }))
       },
       updateY(id, y) {
@@ -88,15 +90,15 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              y
-            }
-          }
+              y,
+            },
+          },
         }))
       },
     }),
     {
       name: 'assets-store',
       version: 0,
-    }
-  )
+    },
+  ),
 )

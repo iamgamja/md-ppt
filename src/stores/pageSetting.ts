@@ -25,38 +25,38 @@ export const usePageSettingStore = create<PageSettingStore>()(
     (set, get) => ({
       sectionsList: [1],
       activeSection: 1,
-      activeTab: "markdown",
+      activeTab: 'markdown',
 
       setSectionsList(sectionsList) {
         set(() => ({
-          sectionsList
+          sectionsList,
         }))
       },
       setActiveSection(activeSection) {
         set(() => ({
-          activeSection
+          activeSection,
         }))
       },
       setActiveTab(activeTab) {
         set(() => ({
-          activeTab
+          activeTab,
         }))
       },
 
       async addFile(id, file) {
-        if (!file) return;
+        if (!file) return
         const assetid = useAssetsStore.getState().add(await toBase64(file))
-    
+
         useSectionsStore.getState().addAsset(id, assetid)
       },
 
       addSection() {
         const res = useSectionsStore.getState().add()
-        const newSectionsList = [ ...get().sectionsList, res ]
+        const newSectionsList = [...get().sectionsList, res]
 
         set(() => ({
           sectionsList: newSectionsList,
-          activeSection: res
+          activeSection: res,
         }))
       },
 
@@ -64,11 +64,11 @@ export const usePageSettingStore = create<PageSettingStore>()(
         const res = useSectionsStore.getState().copy(id)
 
         const newSectionsList = [...get().sectionsList]
-        newSectionsList.splice(get().sectionsList.indexOf(id)+1, 0, res)
+        newSectionsList.splice(get().sectionsList.indexOf(id) + 1, 0, res)
 
         set(() => ({
           sectionsList: newSectionsList,
-          activeSection: res
+          activeSection: res,
         }))
       },
 
@@ -77,25 +77,25 @@ export const usePageSettingStore = create<PageSettingStore>()(
 
         const newSectionsList = [...get().sectionsList]
         newSectionsList.splice(get().sectionsList.indexOf(id), 1)
-        
+
         set(() => ({
           sectionsList: newSectionsList,
-          activeSection: newSectionsList[0]
+          activeSection: newSectionsList[0],
         }))
       },
 
       removeAsset(assetid: number) {
         useAssetsStore.getState().remove(assetid)
-    
+
         useSectionsStore.getState().updateAssets(
           get().activeSection,
-          useSectionsStore.getState().sections[get().activeSection].assets.filter(x => x !== assetid)
+          useSectionsStore.getState().sections[get().activeSection].assets.filter((x) => x !== assetid),
         )
-      }
+      },
     }),
     {
       name: 'page-setting-store',
       version: 0,
-    }
-  )
+    },
+  ),
 )

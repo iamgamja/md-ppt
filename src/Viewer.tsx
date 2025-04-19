@@ -37,12 +37,57 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
           @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
           center {
+            position: absolute;
+            top: 0px;
+            left: 0px;
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+          }
+
+          div.bg {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+
+            background-color: var(--ppt-color-bg);
+            color: var(--ppt-color-text);
+
+            --ppt-color-highlight: #ff1b6a;
+            --ppt-color-block: #efefef;
+          }
+
+          div.bg.title {
+            --ppt-color-bg: #0e2432;
+            --ppt-color-text: #efefef;
+          }
+
+          div.bg.page {
+            --ppt-color-bg: white;
+            --ppt-color-text: black;
+          }
+
+          div.bg hr {
+            width: 100px;
+            height: 2px;
+            background-color: var(--ppt-color-highlight);
+            margin-bottom: 24px;
+          }
+
+          div.bg div.block {
+            width: 100%;
+            background-color: var(--ppt-color-block);
+            padding: 20px;
+          }
+
+          div.bg :is(h1,h2,h3,h4,h5,h6) {
+            margin-top: 10px;
           }
         `}</style>
         <link rel="stylesheet" href="https://unpkg.com/bamboo.css"></link>
@@ -59,7 +104,6 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
               aspectRatio: '16/9',
               position: 'absolute',
               width: `${BASIC_WIDTH}px`,
-              padding: '20px',
               transformOrigin: 'top left',
               transform: `scale(${width / BASIC_WIDTH})`,
               fontFamily: '"Noto Sans KR", sans-serif',

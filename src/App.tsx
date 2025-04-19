@@ -225,13 +225,13 @@ export default function App() {
                         </div>
                         <div className="grid gap-2">
                           <Label className="grid grid-cols-3 items-center gap-4">
-                            Import
+                            Load
                             <Input type="file" onChange={(e) => importStores(e.target.files?.[0])} className="col-span-2 h-8" />
                           </Label>
                         </div>
                         <div className="grid gap-2">
                           <Label className="grid grid-cols-3 items-center gap-4">
-                            Export
+                            Save
                             <Button onClick={exportStores} className="col-span-2 h-8">
                               click!
                             </Button>

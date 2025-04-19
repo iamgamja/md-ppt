@@ -89,6 +89,10 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
           div.bg :is(h1,h2,h3,h4,h5,h6) {
             margin-top: 10px;
           }
+
+          div.bg :is(em, strong, ins) {
+            color: var(--ppt-color-highlight);
+          }
         `}</style>
         <link rel="stylesheet" href="https://unpkg.com/bamboo.css"></link>
         <div

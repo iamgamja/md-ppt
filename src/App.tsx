@@ -19,7 +19,7 @@ import { exportStores, importStores } from './utils/fileSave'
 import { exportPDF } from './utils/exportPDF'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { MdAnimation, MdOutlineDelete, MdOutlineContentCopy, MdAddCircleOutline } from 'react-icons/md'
+import { MdAnimation, MdOutlineDelete, MdOutlineContentCopy, MdAddCircleOutline, MdDownloading } from 'react-icons/md'
 
 export default function App() {
   const SectionsStore = useSectionsStore()
@@ -334,7 +334,7 @@ export default function App() {
                               }}
                               className="col-span-2 h-8"
                             >
-                              click!
+                              {isExportingPDF ? <MdDownloading /> : 'click!'}
                             </Button>
                           </Label>
                         </div>

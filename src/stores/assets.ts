@@ -37,6 +37,7 @@ export const useAssetsStore = create<AssetsStore>()(
               size: 100,
               x: 0,
               y: 0,
+              animation: null,
             },
           },
         }))
@@ -49,6 +50,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [newid]: {
               ...prev.assets[id],
+              animation: prev.assets[id].animation ? { ...prev.assets[id].animation } : null,
             },
           },
         }))

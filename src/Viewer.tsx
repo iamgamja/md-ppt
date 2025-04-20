@@ -12,26 +12,27 @@ import { h } from 'hastscript'
 import { visit } from 'unist-util-visit'
 import ErrorBoundary from './utils/ErrorBoundary'
 import { motion } from 'framer-motion'
+import { asset } from './types/asset'
 
 const sineWave = Array.from({ length: 60 }, (_, i) => {
   const progress = (i / (60 - 1)) * (2 * Math.PI) // 0 ~ 2π
   return Math.sin(progress)
 })
 
-const generateAnimProps = (
-  type: 'vibrate' | 'moveto',
-  ease: 'linear' | 'circIn',
-  direction: 'x' | 'y',
-  duration: number,
-  value: number,
-): {
+type animProps = {
   animate: { [key: string]: number | number[] }
   transition: {
     duration: number
     repeat: number
     ease: string | [number, number, number, number]
   }
-} => {
+}
+
+const generateAnimProps = (animation: asset['animation'] | null): animProps | Record<string, never> => {
+  if (animation === null) return {}
+
+  const { type, ease, direction, duration, value } = animation
+
   if (type === 'vibrate') {
     const wave = sineWave.map((v) => v * value)
     return {
@@ -175,7 +176,7 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
                   left: AssetsStore.assets[asset].x,
                   top: AssetsStore.assets[asset].y,
                 }}
-                {...generateAnimProps('moveto', 'circIn', 'x', 1, 500)}
+                {...generateAnimProps(AssetsStore.assets[asset].animation)}
               />
             ))}
           </div>

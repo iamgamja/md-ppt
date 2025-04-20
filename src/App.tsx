@@ -303,7 +303,7 @@ export default function App() {
                           <Label className="grid grid-cols-3 items-center gap-4">
                             Presentation
                             <Button asChild className="col-span-2 h-8">
-                              <Link to="/presentation">click!</Link>
+                              <Link to="/md-ppt/presentation">click!</Link>
                             </Button>
                           </Label>
                         </div>

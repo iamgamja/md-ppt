@@ -38,6 +38,8 @@ export const usePageSettingStore = create<PageSettingStore>()(
         }))
       },
       setActiveTab(activeTab) {
+        if (!(activeTab === 'markdown' || activeTab === 'assets')) return
+
         set(() => ({
           activeTab,
         }))

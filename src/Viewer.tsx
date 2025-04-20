@@ -11,6 +11,50 @@ import { Root } from 'mdast'
 import { h } from 'hastscript'
 import { visit } from 'unist-util-visit'
 import ErrorBoundary from './utils/ErrorBoundary'
+import { motion } from 'framer-motion'
+
+const sineWave = Array.from({ length: 60 }, (_, i) => {
+  const progress = (i / (60 - 1)) * (2 * Math.PI) // 0 ~ 2π
+  return Math.sin(progress)
+})
+
+const generateAnimProps = (
+  type: 'vibrate' | 'moveto',
+  ease: 'linear' | 'circIn',
+  direction: 'x' | 'y',
+  duration: number,
+  value: number,
+): {
+  animate: { [key: string]: number | number[] }
+  transition: {
+    duration: number
+    repeat: number
+    ease: string | [number, number, number, number]
+  }
+} => {
+  if (type === 'vibrate') {
+    const wave = sineWave.map((v) => v * value)
+    return {
+      animate: { [direction]: wave },
+      transition: {
+        duration,
+        repeat: Infinity,
+        ease,
+      },
+    }
+  } else if (type === 'moveto') {
+    return {
+      animate: { [direction]: value },
+      transition: {
+        duration,
+        repeat: Infinity,
+        ease,
+      },
+    }
+  } else {
+    throw new Error('Unknown animation type')
+  }
+}
 
 function myDirectivePlugin() {
   return function (tree: Root) {
@@ -120,7 +164,7 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
             </ReactMarkdown>
 
             {assets.map((asset, idx) => (
-              <img
+              <motion.img
                 key={idx}
                 src={AssetsStore.assets[asset].content}
                 style={{
@@ -131,6 +175,7 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
                   left: AssetsStore.assets[asset].x,
                   top: AssetsStore.assets[asset].y,
                 }}
+                {...generateAnimProps('moveto', 'circIn', 'x', 1, 500)}
               />
             ))}
           </div>

@@ -19,6 +19,7 @@ import { exportStores, importStores } from './utils/fileSave'
 import { exportPDF } from './utils/exportPDF'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { MdAnimation, MdOutlineDelete, MdOutlineContentCopy, MdAddCircleOutline } from 'react-icons/md'
 
 export default function App() {
   const SectionsStore = useSectionsStore()
@@ -76,7 +77,7 @@ export default function App() {
               setActiveTab('markdown')
             }}
           >
-            copy
+            <MdOutlineContentCopy />
           </TabsTrigger>
           <TabsTrigger
             value="tmp2"
@@ -87,7 +88,7 @@ export default function App() {
               setActiveTab('markdown')
             }}
           >
-            delete
+            <MdOutlineDelete />
           </TabsTrigger>
         </TabsList>
 
@@ -139,12 +140,12 @@ export default function App() {
                               </div>
                               <div className="flex flex-col justify-between">
                                 <Button variant="destructive" className="w-7 h-7" onClick={() => removeAsset(asset)}>
-                                  X
+                                  <MdOutlineDelete />
                                 </Button>
                                 <Popover>
                                   <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-7 h-7">
-                                      ani
+                                      <MdAnimation />
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent>
@@ -278,7 +279,7 @@ export default function App() {
                 <div>
                   <motion.div className={'p-1 border border-dashed rounded-md bg-gray-100'} onClick={addSection} whileTap={{ scale: 0.9 }}>
                     <div className="aspect-video w-[100px] flex flex-wrap justify-center content-center text-gray-500">
-                      <span>+</span>
+                      <MdAddCircleOutline />
                     </div>
                   </motion.div>
                 </div>

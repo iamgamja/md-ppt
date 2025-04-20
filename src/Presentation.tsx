@@ -3,6 +3,7 @@ import Fade from 'embla-carousel-fade'
 import { usePageSettingStore } from './stores/pageSetting'
 import Viewer from './Viewer'
 import { useEffect, useState } from 'react'
+import FullscreenToggleButton from './components/fullscreenButton'
 
 export default function Presentation() {
   const sectionsList = usePageSettingStore((state) => state.sectionsList)
@@ -20,14 +21,18 @@ export default function Presentation() {
   }, [api])
 
   return (
-    <Carousel plugins={[Fade()]} setApi={setApi}>
-      <CarouselContent>
-        {sectionsList.map((id, idx) => (
-          <CarouselItem key={idx}>
-            <Viewer id={id} width={window.innerWidth} />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+    <>
+      <Carousel plugins={[Fade()]} setApi={setApi}>
+        <CarouselContent>
+          {sectionsList.map((id, idx) => (
+            <CarouselItem key={idx}>
+              <Viewer id={id} width={window.innerWidth} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
+      <FullscreenToggleButton />
+    </>
   )
 }

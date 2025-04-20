@@ -5,7 +5,7 @@ import Viewer from './Viewer'
 import { useEffect, useState } from 'react'
 
 export default function Presentation() {
-  const { sectionsList } = usePageSettingStore()
+  const sectionsList = usePageSettingStore((state) => state.sectionsList)
 
   const [api, setApi] = useState<CarouselApi>()
 

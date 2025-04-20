@@ -72,10 +72,8 @@ function myDirectivePlugin() {
 }
 
 export default function Viewer({ id, width }: { id: number; width: number }) {
-  const { sections } = useSectionsStore()
-  const AssetsStore = useAssetsStore()
-
-  const assets = sections[id].assets
+  const sections = useSectionsStore((state) => state.sections)
+  const assets = useAssetsStore((state) => state.assets)
 
   return (
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
@@ -164,19 +162,19 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
               {sections[id].content}
             </ReactMarkdown>
 
-            {assets.map((asset, idx) => (
+            {sections[id].assets.map((asset, idx) => (
               <motion.img
                 key={idx}
-                src={AssetsStore.assets[asset].content}
+                src={assets[asset].content}
                 style={{
                   position: 'absolute',
                   aspectRatio: '1 / 1',
                   objectFit: 'contain',
-                  width: AssetsStore.assets[asset].size,
-                  left: AssetsStore.assets[asset].x,
-                  top: AssetsStore.assets[asset].y,
+                  width: assets[asset].size,
+                  left: assets[asset].x,
+                  top: assets[asset].y,
                 }}
-                {...generateAnimProps(AssetsStore.assets[asset].animation)}
+                {...generateAnimProps(assets[asset].animation)}
               />
             ))}
           </div>

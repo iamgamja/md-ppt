@@ -2,6 +2,8 @@ import shadow from 'react-shadow'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkDirective from 'remark-directive'
+import rehypeMathjax from 'rehype-mathjax'
+import remarkMath from 'remark-math'
 import { BASIC_WIDTH } from './constants/BASIC_SIZE'
 import { useAssetsStore } from './stores/assets'
 import { useSectionsStore } from './stores/sections'
@@ -113,7 +115,9 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
               fontFamily: '"Noto Sans KR", sans-serif',
             }}
           >
-            <ReactMarkdown remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkDirective, myDirectivePlugin]}>{sections[id].content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkDirective, myDirectivePlugin, remarkMath]} rehypePlugins={[rehypeMathjax]}>
+              {sections[id].content}
+            </ReactMarkdown>
 
             {assets.map((asset, idx) => (
               <img

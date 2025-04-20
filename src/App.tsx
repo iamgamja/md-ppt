@@ -4,7 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
-import { Popover, PopoverTrigger, PopoverContent } from './components/ui/popover'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select'
 import { motion } from 'framer-motion'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 import Viewer from './Viewer'
@@ -151,11 +152,76 @@ export default function App() {
                                         <h4 className="font-medium leading-none">Animations</h4>
                                       </div>
                                       <div className="grid gap-2">
-                                        <p>🛠️ Work in Progress...</p>
-                                        {/* <Label className="grid grid-cols-3 items-center gap-4">
+                                        {/* Animation Type */}
+                                        <Label>
                                           Type
-                                          <Input className="col-span-2 h-8"/>
-                                        </Label> */}
+                                          <Select
+                                            value={AssetsStore.assets[asset].animation.type}
+                                            onValueChange={(type) => AssetsStore.updateAnimationType(asset, type as 'vibrate' | 'moveto')}
+                                          >
+                                            <SelectTrigger>
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="vibrate">Vibrate</SelectItem>
+                                              <SelectItem value="moveto">Move To</SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        </Label>
+
+                                        {/* Animation Ease */}
+                                        <Label>
+                                          Ease
+                                          <Select
+                                            value={AssetsStore.assets[asset].animation.ease}
+                                            onValueChange={(ease) => AssetsStore.updateAnimationEase(asset, ease as 'linear' | 'circIn')}
+                                          >
+                                            <SelectTrigger>
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="linear">Linear</SelectItem>
+                                              <SelectItem value="circIn">CircIn</SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        </Label>
+
+                                        {/* Animation Direction */}
+                                        <Label>
+                                          Direction
+                                          <Select
+                                            value={AssetsStore.assets[asset].animation.direction}
+                                            onValueChange={(direction) => AssetsStore.updateAnimationDirection(asset, direction as 'x' | 'y')}
+                                          >
+                                            <SelectTrigger>
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="x">X</SelectItem>
+                                              <SelectItem value="y">Y</SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        </Label>
+
+                                        {/* Animation Duration */}
+                                        <Label>
+                                          Duration
+                                          <Input
+                                            type="number"
+                                            value={AssetsStore.assets[asset].animation.duration}
+                                            onChange={(e) => AssetsStore.updateAnimationDuration(asset, parseFloat(e.target.value))}
+                                          />
+                                        </Label>
+
+                                        {/* Animation Value */}
+                                        <Label>
+                                          Value
+                                          <Input
+                                            type="number"
+                                            value={AssetsStore.assets[asset].animation.value}
+                                            onChange={(e) => AssetsStore.updateAnimationValue(asset, parseFloat(e.target.value))}
+                                          />
+                                        </Label>
                                       </div>
                                     </div>
                                   </PopoverContent>

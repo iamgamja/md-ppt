@@ -2,6 +2,14 @@ import { asset } from '@/types/asset'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+const defaultAnimation = {
+  type: 'vibrate' as const,
+  ease: 'linear' as const,
+  direction: 'x' as const,
+  duration: 1,
+  value: 0,
+}
+
 type AssetsStore = {
   getNextId: () => number
 
@@ -13,6 +21,11 @@ type AssetsStore = {
   updateSize: (id: number, size: number) => void
   updateX: (id: number, x: number) => void
   updateY: (id: number, y: number) => void
+  updateAnimationType: (id: number, type: 'vibrate' | 'moveto') => void
+  updateAnimationEase: (id: number, ease: 'linear' | 'circIn') => void
+  updateAnimationDirection: (id: number, direction: 'x' | 'y') => void
+  updateAnimationDuration: (id: number, duration: number) => void
+  updateAnimationValue: (id: number, value: number) => void
 }
 
 export const useAssetsStore = create<AssetsStore>()(
@@ -37,7 +50,7 @@ export const useAssetsStore = create<AssetsStore>()(
               size: 100,
               x: 0,
               y: 0,
-              animation: null,
+              animation: { ...defaultAnimation },
             },
           },
         }))
@@ -50,7 +63,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [newid]: {
               ...prev.assets[id],
-              animation: prev.assets[id].animation ? { ...prev.assets[id].animation } : null,
+              animation: { ...prev.assets[id].animation },
             },
           },
         }))
@@ -93,6 +106,76 @@ export const useAssetsStore = create<AssetsStore>()(
             [id]: {
               ...prev.assets[id],
               y,
+            },
+          },
+        }))
+      },
+      updateAnimationType(id, type) {
+        set((prev) => ({
+          assets: {
+            ...prev.assets,
+            [id]: {
+              ...prev.assets[id],
+              animation: {
+                ...(prev.assets[id].animation ?? defaultAnimation),
+                type,
+              },
+            },
+          },
+        }))
+      },
+      updateAnimationEase(id, ease) {
+        set((prev) => ({
+          assets: {
+            ...prev.assets,
+            [id]: {
+              ...prev.assets[id],
+              animation: {
+                ...(prev.assets[id].animation ?? defaultAnimation),
+                ease,
+              },
+            },
+          },
+        }))
+      },
+      updateAnimationDirection(id, direction) {
+        set((prev) => ({
+          assets: {
+            ...prev.assets,
+            [id]: {
+              ...prev.assets[id],
+              animation: {
+                ...(prev.assets[id].animation ?? defaultAnimation),
+                direction,
+              },
+            },
+          },
+        }))
+      },
+      updateAnimationDuration(id, duration) {
+        set((prev) => ({
+          assets: {
+            ...prev.assets,
+            [id]: {
+              ...prev.assets[id],
+              animation: {
+                ...(prev.assets[id].animation ?? defaultAnimation),
+                duration,
+              },
+            },
+          },
+        }))
+      },
+      updateAnimationValue(id, value) {
+        set((prev) => ({
+          assets: {
+            ...prev.assets,
+            [id]: {
+              ...prev.assets[id],
+              animation: {
+                ...(prev.assets[id].animation ?? defaultAnimation),
+                value,
+              },
             },
           },
         }))

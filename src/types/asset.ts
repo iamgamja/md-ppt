@@ -9,5 +9,5 @@ export type asset = {
     direction: 'x' | 'y'
     duration: number
     value: number
-  } | null
+  }
 }

@@ -26,14 +26,14 @@ export const useSectionsStore = create<SectionsStore>()(
         )
       },
 
-      sections: { 1: { content: '# title', assets: [] } },
+      sections: { 1: { content: '::::div{.bg .title}\n:::center\n# title\n---\n### subtitle\n', assets: [] } },
       add() {
         const newid = get().getNextId()
         set((prev) => ({
           sections: {
             ...prev.sections,
             [newid]: {
-              content: '# title',
+              content: '::::div{.bg .page}\n# title\n',
               assets: [],
             },
           },

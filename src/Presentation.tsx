@@ -23,7 +23,7 @@ export default function Presentation() {
     <Carousel plugins={[Fade()]} setApi={setApi}>
       <CarouselContent>
         {sectionsList.map((id, idx) => (
-          <CarouselItem className="border" key={idx}>
+          <CarouselItem key={idx}>
             <Viewer id={id} width={window.innerWidth} />
           </CarouselItem>
         ))}

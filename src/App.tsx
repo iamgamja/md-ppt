@@ -18,6 +18,7 @@ import { usePageSettingStore } from './stores/pageSetting'
 import { exportStores, importStores } from './utils/fileSave'
 import { exportPDF } from './utils/exportPDF'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function App() {
   const SectionsStore = useSectionsStore()
@@ -299,6 +300,15 @@ export default function App() {
                         </div>
                         <div className="grid gap-2">
                           <Label className="grid grid-cols-3 items-center gap-4">
+                            Presentation
+                            <Button asChild className="col-span-2 h-8">
+                              <Link to="/presentation">click!</Link>
+                            </Button>
+                          </Label>
+                        </div>
+                        <hr />
+                        <div className="grid gap-2">
+                          <Label className="grid grid-cols-3 items-center gap-4">
                             Load
                             <Input type="file" onChange={(e) => importStores(e.target.files?.[0])} className="col-span-2 h-8" />
                           </Label>
@@ -327,6 +337,7 @@ export default function App() {
                             </Button>
                           </Label>
                         </div>
+                        <hr />
                         <div className="grid gap-2">
                           <Label className="grid grid-cols-3 items-center gap-4">
                             Reset

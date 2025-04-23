@@ -28,9 +28,7 @@ type animProps = {
   }
 }
 
-const generateAnimProps = (animation: asset['animation'] | null): animProps | Record<string, never> => {
-  if (animation === null) return {}
-
+const generateAnimProps = (animation: asset['animation']): animProps => {
   const { type, ease, direction, duration, value } = animation
 
   if (type === 'vibrate') {

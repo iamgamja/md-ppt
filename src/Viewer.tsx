@@ -143,13 +143,23 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
           div.bg hr {
             width: 100px;
             margin-bottom: 24px;
-            border-bottom: 1px solid var(--ppt-color-highlight);
+            border-bottom: 2px solid var(--ppt-color-highlight);
           }
 
           div.bg div.block {
             width: 100%;
             background-color: var(--ppt-color-block);
             padding: 20px;
+            box-shadow: 0px 2px 6px rgb(0 0 0 / 10%);
+          }
+
+          div.bg div.block.flex {
+            display: flex;
+            gap: 20px;
+          }
+
+          div.bg div.block.flex.column {
+            flex-direction: column;
           }
 
           div.bg :is(h1,h2,h3,h4,h5,h6) {

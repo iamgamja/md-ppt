@@ -90,17 +90,17 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
           @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
           :host {
-          	--b-font-main: system-ui, sans-serif;
-          	--b-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-          
-          	--b-txt: #2e3440;
-          	--b-bg-1: #fff;
-          	--b-bg-2: #eceff4;
-          	--b-line: #eceff4;
-          	--b-link: #bf616a;
-          	--b-btn-bg: #242933;
-          	--b-btn-txt: #fff;
-          	--b-focus: #d8dee9;
+            --b-font-main: system-ui, sans-serif;
+            --b-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            
+            --b-txt: #2e3440;
+            --b-bg-1: #fff;
+            --b-bg-2: #eceff4;
+            --b-line: #eceff4;
+            --b-link: #bf616a;
+            --b-btn-bg: #242933;
+            --b-btn-txt: #fff;
+            --b-focus: #d8dee9;
           }
 
           center {
@@ -142,9 +142,8 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
 
           div.bg hr {
             width: 100px;
-            height: 2px;
-            background-color: var(--ppt-color-highlight);
             margin-bottom: 24px;
+            border-bottom: 1px solid var(--ppt-color-highlight);
           }
 
           div.bg div.block {

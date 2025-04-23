@@ -21,11 +21,12 @@ type AssetsStore = {
   updateSize: (id: number, size: number) => void
   updateX: (id: number, x: number) => void
   updateY: (id: number, y: number) => void
-  updateAnimationType: (id: number, type: 'vibrate' | 'moveto') => void
-  updateAnimationEase: (id: number, ease: 'linear' | 'circIn') => void
-  updateAnimationDirection: (id: number, direction: 'x' | 'y') => void
-  updateAnimationDuration: (id: number, duration: number) => void
-  updateAnimationValue: (id: number, value: number) => void
+  addAnimation: (id: number) => void
+  updateAnimationType: (id: number, idx: number, type: 'vibrate' | 'moveto') => void
+  updateAnimationEase: (id: number, idx: number, ease: 'linear' | 'circIn') => void
+  updateAnimationDirection: (id: number,idx: number,  direction: 'x' | 'y') => void
+  updateAnimationDuration: (id: number, idx: number, duration: number) => void
+  updateAnimationValue: (id: number,idx: number,  value: number) => void
 }
 
 export const useAssetsStore = create<AssetsStore>()(
@@ -50,7 +51,7 @@ export const useAssetsStore = create<AssetsStore>()(
               size: 100,
               x: 0,
               y: 0,
-              animation: { ...defaultAnimation },
+              animation: [],
             },
           },
         }))
@@ -110,72 +111,80 @@ export const useAssetsStore = create<AssetsStore>()(
           },
         }))
       },
-      updateAnimationType(id, type) {
+      addAnimation(id) {
+        const animations = get().assets[id].animation
+        animations.push({ ...defaultAnimation })
         set((prev) => ({
           assets: {
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: {
-                ...(prev.assets[id].animation ?? defaultAnimation),
-                type,
-              },
+              animation: animations
             },
           },
         }))
       },
-      updateAnimationEase(id, ease) {
+      updateAnimationType(id, idx, type) {
+        const animations = get().assets[id].animation
+        animations[idx].type = type
         set((prev) => ({
           assets: {
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: {
-                ...(prev.assets[id].animation ?? defaultAnimation),
-                ease,
-              },
+              animation: animations
             },
           },
         }))
       },
-      updateAnimationDirection(id, direction) {
+      updateAnimationEase(id, idx, ease) {
+        const animations = get().assets[id].animation
+        animations[idx].ease = ease
         set((prev) => ({
           assets: {
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: {
-                ...(prev.assets[id].animation ?? defaultAnimation),
-                direction,
-              },
+              animation: animations
             },
           },
         }))
       },
-      updateAnimationDuration(id, duration) {
+      updateAnimationDirection(id, idx, direction) {
+        const animations = get().assets[id].animation
+        animations[idx].direction = direction
         set((prev) => ({
           assets: {
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: {
-                ...(prev.assets[id].animation ?? defaultAnimation),
-                duration,
-              },
+              animation: animations
             },
           },
         }))
       },
-      updateAnimationValue(id, value) {
+      updateAnimationDuration(id, idx, duration) {
+        const animations = get().assets[id].animation
+        animations[idx].duration = duration
         set((prev) => ({
           assets: {
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: {
-                ...(prev.assets[id].animation ?? defaultAnimation),
-                value,
-              },
+              animation: animations
+            },
+          },
+        }))
+      },
+      updateAnimationValue(id, idx, value) {
+        const animations = get().assets[id].animation
+        animations[idx].value = value
+        set((prev) => ({
+          assets: {
+            ...prev.assets,
+            [id]: {
+              ...prev.assets[id],
+              animation: animations
             },
           },
         }))

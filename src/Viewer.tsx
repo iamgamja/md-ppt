@@ -12,7 +12,8 @@ import { h } from 'hastscript'
 import { visit } from 'unist-util-visit'
 import ErrorBoundary from './utils/ErrorBoundary'
 import { motion } from 'framer-motion'
-import { asset } from './types/asset'
+import { animation } from './types/asset'
+import { ReactNode } from 'react'
 
 const sineWave = Array.from({ length: 60 }, (_, i) => {
   const progress = (i / (60 - 1)) * (2 * Math.PI) // 0 ~ 2π
@@ -28,7 +29,7 @@ type animProps = {
   }
 }
 
-const generateAnimProps = (animation: asset['animation']): animProps => {
+const generateAnimProps = (animation: animation): animProps => {
   const { type, ease, direction, duration, value } = animation
 
   if (type === 'vibrate') {
@@ -67,6 +68,15 @@ function myDirectivePlugin() {
       }
     })
   }
+}
+
+function wrapWithMotion({ animations, idx, children, key }: { animations: animation[]; idx: number; children: ReactNode, key: number | string }) {
+  if (idx >= animations.length) return children
+
+  const animation = animations[idx]
+
+  return <motion.div key={`
+recursion-${key}-${idx}`} {...generateAnimProps(animation)}>{wrapWithMotion({ animations, idx: idx + 1, children, key })}</motion.div>
 }
 
 export default function Viewer({ id, width }: { id: number; width: number }) {
@@ -160,21 +170,27 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
               {sections[id].content}
             </ReactMarkdown>
 
-            {sections[id].assets.map((asset, idx) => (
-              <motion.img
-                key={idx}
-                src={assets[asset].content}
-                style={{
-                  position: 'absolute',
-                  aspectRatio: '1 / 1',
-                  objectFit: 'contain',
-                  width: assets[asset].size,
-                  left: assets[asset].x,
-                  top: assets[asset].y,
-                }}
-                {...generateAnimProps(assets[asset].animation)}
-              />
-            ))}
+            {sections[id].assets.map((asset, idx) =>
+              wrapWithMotion({
+                animations: assets[asset].animation,
+                idx: 0,
+                key: idx,
+                children: (
+                  <motion.img
+                    key={idx}
+                    src={assets[asset].content}
+                    style={{
+                      position: 'absolute',
+                      aspectRatio: '1 / 1',
+                      objectFit: 'contain',
+                      width: assets[asset].size,
+                      left: assets[asset].x,
+                      top: assets[asset].y,
+                    }}
+                  />
+                ),
+              }),
+            )}
           </div>
         </div>
       </shadow.div>

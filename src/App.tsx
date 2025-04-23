@@ -20,6 +20,7 @@ import { exportPDF } from './utils/exportPDF'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MdAnimation, MdOutlineDelete, MdOutlineContentCopy, MdAddCircleOutline, MdDownloading } from 'react-icons/md'
+import { animation } from './types/asset'
 
 export default function App() {
   const SectionsStore = useSectionsStore()
@@ -27,6 +28,7 @@ export default function App() {
   const { sectionsList, activeSection, activeTab, setSectionsList, setActiveSection, setActiveTab, addFile, addSection, copySection, removeSection, removeAsset } =
     usePageSettingStore()
   const [isExportingPDF, setIsExportingPDF] = useState(false)
+  const [activeAnimationTab, setActiveAnimationTab] = useState('animation-0')
 
   const handleSectionListDragEnd = (result: DropResult) => {
     if (!result.destination) return
@@ -149,91 +151,116 @@ export default function App() {
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <div className="grid gap-4">
-                                      <div className="space-y-2">
-                                        <h4 className="font-medium leading-none">Animations</h4>
-                                      </div>
-                                      <div className="grid gap-2">
-                                        {/* Animation Type */}
-                                        <Label className="grid grid-cols-3 items-center gap-4">
-                                          Type
-                                          <div className="col-span-2">
-                                            <Select
-                                              value={AssetsStore.assets[asset].animation.type}
-                                              onValueChange={(type) => AssetsStore.updateAnimationType(asset, type as 'vibrate' | 'moveto')}
-                                            >
-                                              <SelectTrigger className="w-full">
-                                                <SelectValue />
-                                              </SelectTrigger>
-                                              <SelectContent>
-                                                <SelectItem value="vibrate">Vibrate</SelectItem>
-                                                <SelectItem value="moveto">Move To</SelectItem>
-                                              </SelectContent>
-                                            </Select>
+                                    <Tabs value={activeAnimationTab} onValueChange={t => (t!=='tmp1' && setActiveAnimationTab(t))  }>
+                                      <TabsList>
+                                        {AssetsStore.assets[asset].animation.map((_, idx) => (
+                                          <TabsTrigger key={idx} value={`animation-${idx}`}>
+                                            {idx+1}
+                                          </TabsTrigger>
+                                        ))}
+                                        <TabsTrigger
+                                          value="tmp1"
+                                          className="bg-blue-300"
+                                          onClick={() => {
+                                            AssetsStore.addAnimation(asset);
+                                            setActiveAnimationTab(`animation-${AssetsStore.assets[asset].animation.length - 1}`);
+                                          }}
+                                        >
+                                          <MdAddCircleOutline />
+                                        </TabsTrigger>
+                                      </TabsList>
+                                      {AssetsStore.assets[asset].animation.map((_, idx) => (
+                                        <TabsContent key={idx} value={`animation-${idx}`}>
+
+                                          <div className="grid gap-4">
+                                            <div className="space-y-2">
+                                              <h4 className="font-medium leading-none">Animations</h4>
+                                            </div>
+                                            <div className="grid gap-2">
+                                              {/* Animation Type */}
+                                              <Label className="grid grid-cols-3 items-center gap-4">
+                                                Type
+                                                <div className="col-span-2">
+                                                  <Select
+                                                    value={AssetsStore.assets[asset].animation[idx].type}
+                                                    onValueChange={(type) => AssetsStore.updateAnimationType(asset, idx, type as animation['type'])}
+                                                  >
+                                                    <SelectTrigger className="w-full">
+                                                      <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                      <SelectItem value="vibrate">Vibrate</SelectItem>
+                                                      <SelectItem value="moveto">Move To</SelectItem>
+                                                    </SelectContent>
+                                                  </Select>
+                                                </div>
+                                              </Label>
+
+                                              {/* Animation Ease */}
+                                              <Label className="grid grid-cols-3 items-center gap-4">
+                                                Ease
+                                                <div className="col-span-2">
+                                                  <Select
+                                                    value={AssetsStore.assets[asset].animation[idx].ease}
+                                                    onValueChange={(ease) => AssetsStore.updateAnimationEase(asset, idx, ease as animation['ease'])}
+                                                  >
+                                                    <SelectTrigger className="w-full">
+                                                      <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                      <SelectItem value="linear">Linear</SelectItem>
+                                                      <SelectItem value="circIn">CircIn</SelectItem>
+                                                    </SelectContent>
+                                                  </Select>
+                                                </div>
+                                              </Label>
+
+                                              {/* Animation Direction */}
+                                              <Label className="grid grid-cols-3 items-center gap-4">
+                                                Direction
+                                                <div className="col-span-2">
+                                                  <Select
+                                                    value={AssetsStore.assets[asset].animation[idx].direction}
+                                                    onValueChange={(direction) => AssetsStore.updateAnimationDirection(asset, idx, direction as animation['direction'])}
+                                                  >
+                                                    <SelectTrigger className="w-full">
+                                                      <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                      <SelectItem value="x">X</SelectItem>
+                                                      <SelectItem value="y">Y</SelectItem>
+                                                    </SelectContent>
+                                                  </Select>
+                                                </div>
+                                              </Label>
+
+                                              {/* Animation Duration */}
+                                              <Label className="grid grid-cols-3 items-center gap-4">
+                                                Duration
+                                                <Input
+                                                  type="number"
+                                                  value={AssetsStore.assets[asset].animation[idx].duration}
+                                                  onChange={(e) => AssetsStore.updateAnimationDuration(asset,idx, parseFloat(e.target.value))}
+                                                  className="col-span-2"
+                                                />
+                                              </Label>
+
+                                              {/* Animation Value */}
+                                              <Label className="grid grid-cols-3 items-center gap-4">
+                                                Value
+                                                <Input
+                                                  type="number"
+                                                  value={AssetsStore.assets[asset].animation[idx].value}
+                                                  onChange={(e) => AssetsStore.updateAnimationValue(asset, idx,parseFloat(e.target.value))}
+                                                  className="col-span-2"
+                                                />
+                                              </Label>
+                                            </div>
                                           </div>
-                                        </Label>
+                                        </TabsContent>
+                                      ))}
+                                    </Tabs>
 
-                                        {/* Animation Ease */}
-                                        <Label className="grid grid-cols-3 items-center gap-4">
-                                          Ease
-                                          <div className="col-span-2">
-                                            <Select
-                                              value={AssetsStore.assets[asset].animation.ease}
-                                              onValueChange={(ease) => AssetsStore.updateAnimationEase(asset, ease as 'linear' | 'circIn')}
-                                            >
-                                              <SelectTrigger className="w-full">
-                                                <SelectValue />
-                                              </SelectTrigger>
-                                              <SelectContent>
-                                                <SelectItem value="linear">Linear</SelectItem>
-                                                <SelectItem value="circIn">CircIn</SelectItem>
-                                              </SelectContent>
-                                            </Select>
-                                          </div>
-                                        </Label>
-
-                                        {/* Animation Direction */}
-                                        <Label className="grid grid-cols-3 items-center gap-4">
-                                          Direction
-                                          <div className="col-span-2">
-                                            <Select
-                                              value={AssetsStore.assets[asset].animation.direction}
-                                              onValueChange={(direction) => AssetsStore.updateAnimationDirection(asset, direction as 'x' | 'y')}
-                                            >
-                                              <SelectTrigger className="w-full">
-                                                <SelectValue />
-                                              </SelectTrigger>
-                                              <SelectContent>
-                                                <SelectItem value="x">X</SelectItem>
-                                                <SelectItem value="y">Y</SelectItem>
-                                              </SelectContent>
-                                            </Select>
-                                          </div>
-                                        </Label>
-
-                                        {/* Animation Duration */}
-                                        <Label className="grid grid-cols-3 items-center gap-4">
-                                          Duration
-                                          <Input
-                                            type="number"
-                                            value={AssetsStore.assets[asset].animation.duration}
-                                            onChange={(e) => AssetsStore.updateAnimationDuration(asset, parseFloat(e.target.value))}
-                                            className="col-span-2"
-                                          />
-                                        </Label>
-
-                                        {/* Animation Value */}
-                                        <Label className="grid grid-cols-3 items-center gap-4">
-                                          Value
-                                          <Input
-                                            type="number"
-                                            value={AssetsStore.assets[asset].animation.value}
-                                            onChange={(e) => AssetsStore.updateAnimationValue(asset, parseFloat(e.target.value))}
-                                            className="col-span-2"
-                                          />
-                                        </Label>
-                                      </div>
-                                    </div>
                                   </PopoverContent>
                                 </Popover>
                               </div>

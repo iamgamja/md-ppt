@@ -146,19 +146,19 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
             border-bottom: 2px solid var(--ppt-color-highlight);
           }
 
-          div.bg div.block {
+          .block {
             width: 100%;
             background-color: var(--ppt-color-block);
             padding: 20px;
             box-shadow: 0px 2px 6px rgb(0 0 0 / 10%);
           }
 
-          div.bg div.block.flex {
+          .flex {
             display: flex;
             gap: 20px;
           }
 
-          div.bg div.block.flex.column {
+          .flex.column {
             flex-direction: column;
           }
 

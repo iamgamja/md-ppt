@@ -127,7 +127,6 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
             color: var(--ppt-color-text);
 
             --ppt-color-highlight: #ff1b6a;
-            --ppt-color-block: #efefef;
           }
 
           div.bg.title {
@@ -136,8 +135,8 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
           }
 
           div.bg.page {
-            --ppt-color-bg: white;
-            --ppt-color-text: black;
+            --ppt-color-bg: #f4faff;
+            --ppt-color-text: #2e3440;
           }
 
           div.bg hr {
@@ -148,9 +147,19 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
 
           .block {
             width: 100%;
-            background-color: var(--ppt-color-block);
+            background-color: #eef3f7;
             padding: 20px;
-            box-shadow: 0px 2px 6px rgb(0 0 0 / 10%);
+            border-radius: 12px;
+            box-shadow:
+              -4px -4px 8px #ffffff,
+              4px 4px 8px rgba(174, 190, 207, 0.6);
+          }
+
+          .block .block {
+            background-color: #e6edf2;
+            box-shadow:
+              -3px -3px 6px #ffffff,
+              3px 3px 6px rgba(174, 190, 207, 0.5);
           }
 
           .flex {

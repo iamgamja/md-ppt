@@ -141,7 +141,6 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
 
           div.bg hr {
             width: 100px;
-            margin-bottom: 24px;
             border-bottom: 2px solid var(--ppt-color-highlight);
           }
 
@@ -154,23 +153,28 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
               -4px -4px 8px #ffffff,
               4px 4px 8px rgba(174, 190, 207, 0.6);
           }
+          
+          .block.ltr {
+            display: flex;
+          }
 
-          .block .block {
+          .block > .block {
             background-color: #e6edf2;
             box-shadow:
               -3px -3px 6px #ffffff,
               3px 3px 6px rgba(174, 190, 207, 0.5);
           }
 
-          .flex {
-            display: flex;
-            gap: 20px;
+          .block > .block {
+            margin: 0 0 20px 0;
           }
-
-          .flex.column {
-            flex-direction: column;
+          .block.ltr > .block {
+            margin: 0 20px 0 0;
           }
-
+          .block > :last-child {
+            margin-bottom: 0;
+          }
+          
           div.bg :is(h1,h2,h3,h4,h5,h6) {
             margin-top: 10px;
           }

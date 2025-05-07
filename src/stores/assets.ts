@@ -12,7 +12,10 @@ const defaultAnimation = {
 
 type AssetsStore = {
   getNextId: () => number
+  getNextDataId: () => number
 
+  datas: { [dataid: number]: string }
+  addData: (content: string) => number
   assets: { [id: number]: asset }
   add: (content: string) => number
   copy: (id: number) => number
@@ -39,15 +42,38 @@ export const useAssetsStore = create<AssetsStore>()(
             .reduce((x, y) => (x > y ? x : y), 0) + 1
         )
       },
+      getNextDataId() {
+        return (
+          Object.keys(get().datas)
+            .map(Number)
+            .reduce((x, y) => (x > y ? x : y), 0) + 1
+        )
+      },
 
+      datas: {},
+      addData(content) {
+        const find = Object.entries(get().datas).find((x) => x[1] === content)
+        if (find) return parseInt(find[0])
+
+        const newid = get().getNextDataId()
+        set((prev) => ({
+          datas: {
+            ...prev.datas,
+            [newid]: content,
+          },
+        }))
+        return newid
+      },
       assets: {},
       add(content) {
         const newid = get().getNextId()
+
+        const dataid = get().addData(content)
         set((prev) => ({
           assets: {
             ...prev.assets,
             [prev.getNextId()]: {
-              content,
+              content: dataid,
               size: 100,
               x: 0,
               y: 0,

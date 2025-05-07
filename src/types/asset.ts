@@ -7,7 +7,7 @@ export type animation = {
 }
 
 export type asset = {
-  content: string
+  content: number
   size: number
   x: number
   y: number

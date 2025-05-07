@@ -85,6 +85,7 @@ function wrapWithMotion({ animations, idx, children, key }: { animations: animat
 export default function Viewer({ id, width }: { id: number; width: number }) {
   const sections = useSectionsStore((state) => state.sections)
   const assets = useAssetsStore((state) => state.assets)
+  const datas = useAssetsStore((state) => state.datas)
 
   return (
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
@@ -217,7 +218,7 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
                 children: (
                   <motion.img
                     key={idx}
-                    src={assets[asset].content}
+                    src={datas[assets[asset].content]}
                     style={{
                       position: 'absolute',
                       aspectRatio: '1 / 1',

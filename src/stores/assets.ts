@@ -64,7 +64,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [newid]: {
               ...prev.assets[id],
-              animation: { ...prev.assets[id].animation },
+              animation: [...prev.assets[id].animation],
             },
           },
         }))

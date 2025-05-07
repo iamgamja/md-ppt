@@ -24,9 +24,9 @@ type AssetsStore = {
   addAnimation: (id: number) => void
   updateAnimationType: (id: number, idx: number, type: 'vibrate' | 'moveto') => void
   updateAnimationEase: (id: number, idx: number, ease: 'linear' | 'circIn') => void
-  updateAnimationDirection: (id: number,idx: number,  direction: 'x' | 'y') => void
+  updateAnimationDirection: (id: number, idx: number, direction: 'x' | 'y') => void
   updateAnimationDuration: (id: number, idx: number, duration: number) => void
-  updateAnimationValue: (id: number,idx: number,  value: number) => void
+  updateAnimationValue: (id: number, idx: number, value: number) => void
 }
 
 export const useAssetsStore = create<AssetsStore>()(
@@ -119,7 +119,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: animations
+              animation: animations,
             },
           },
         }))
@@ -132,7 +132,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: animations
+              animation: animations,
             },
           },
         }))
@@ -145,7 +145,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: animations
+              animation: animations,
             },
           },
         }))
@@ -158,7 +158,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: animations
+              animation: animations,
             },
           },
         }))
@@ -171,7 +171,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: animations
+              animation: animations,
             },
           },
         }))
@@ -184,7 +184,7 @@ export const useAssetsStore = create<AssetsStore>()(
             ...prev.assets,
             [id]: {
               ...prev.assets[id],
-              animation: animations
+              animation: animations,
             },
           },
         }))

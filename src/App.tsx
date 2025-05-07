@@ -151,19 +151,19 @@ export default function App() {
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <Tabs value={activeAnimationTab} onValueChange={t => (t!=='tmp1' && setActiveAnimationTab(t))  }>
+                                    <Tabs value={activeAnimationTab} onValueChange={(t) => t !== 'tmp1' && setActiveAnimationTab(t)}>
                                       <TabsList>
                                         {AssetsStore.assets[asset].animation.map((_, idx) => (
                                           <TabsTrigger key={idx} value={`animation-${idx}`}>
-                                            {idx+1}
+                                            {idx + 1}
                                           </TabsTrigger>
                                         ))}
                                         <TabsTrigger
                                           value="tmp1"
                                           className="bg-blue-300"
                                           onClick={() => {
-                                            AssetsStore.addAnimation(asset);
-                                            setActiveAnimationTab(`animation-${AssetsStore.assets[asset].animation.length - 1}`);
+                                            AssetsStore.addAnimation(asset)
+                                            setActiveAnimationTab(`animation-${AssetsStore.assets[asset].animation.length - 1}`)
                                           }}
                                         >
                                           <MdAddCircleOutline />
@@ -171,7 +171,6 @@ export default function App() {
                                       </TabsList>
                                       {AssetsStore.assets[asset].animation.map((_, idx) => (
                                         <TabsContent key={idx} value={`animation-${idx}`}>
-
                                           <div className="grid gap-4">
                                             <div className="space-y-2">
                                               <h4 className="font-medium leading-none">Animations</h4>
@@ -240,7 +239,7 @@ export default function App() {
                                                 <Input
                                                   type="number"
                                                   value={AssetsStore.assets[asset].animation[idx].duration}
-                                                  onChange={(e) => AssetsStore.updateAnimationDuration(asset,idx, parseFloat(e.target.value))}
+                                                  onChange={(e) => AssetsStore.updateAnimationDuration(asset, idx, parseFloat(e.target.value))}
                                                   className="col-span-2"
                                                 />
                                               </Label>
@@ -251,7 +250,7 @@ export default function App() {
                                                 <Input
                                                   type="number"
                                                   value={AssetsStore.assets[asset].animation[idx].value}
-                                                  onChange={(e) => AssetsStore.updateAnimationValue(asset, idx,parseFloat(e.target.value))}
+                                                  onChange={(e) => AssetsStore.updateAnimationValue(asset, idx, parseFloat(e.target.value))}
                                                   className="col-span-2"
                                                 />
                                               </Label>
@@ -260,7 +259,6 @@ export default function App() {
                                         </TabsContent>
                                       ))}
                                     </Tabs>
-
                                   </PopoverContent>
                                 </Popover>
                               </div>

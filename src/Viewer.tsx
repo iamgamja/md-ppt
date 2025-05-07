@@ -70,13 +70,16 @@ function myDirectivePlugin() {
   }
 }
 
-function wrapWithMotion({ animations, idx, children, key }: { animations: animation[]; idx: number; children: ReactNode, key: number | string }) {
+function wrapWithMotion({ animations, idx, children, key }: { animations: animation[]; idx: number; children: ReactNode; key: number | string }) {
   if (idx >= animations.length) return children
 
   const animation = animations[idx]
 
-  return <motion.div key={`
-recursion-${key}-${idx}`} {...generateAnimProps(animation)}>{wrapWithMotion({ animations, idx: idx + 1, children, key })}</motion.div>
+  return (
+    <motion.div key={`recursion-${key}-${idx}`} {...generateAnimProps(animation)}>
+      {wrapWithMotion({ animations, idx: idx + 1, children, key })}
+    </motion.div>
+  )
 }
 
 export default function Viewer({ id, width }: { id: number; width: number }) {

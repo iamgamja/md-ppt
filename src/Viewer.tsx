@@ -82,7 +82,7 @@ function wrapWithMotion({ animations, idx, children, key }: { animations: animat
   )
 }
 
-export default function Viewer({ id, width }: { id: number; width: number }) {
+export default function Viewer({ id, width, animation }: { id: number; width: number; animation?: boolean }) {
   const sections = useSectionsStore((state) => state.sections)
   const assets = useAssetsStore((state) => state.assets)
   const datas = useAssetsStore((state) => state.datas)
@@ -210,27 +210,44 @@ export default function Viewer({ id, width }: { id: number; width: number }) {
               {sections[id].content}
             </ReactMarkdown>
 
-            {sections[id].assets.map((asset, idx) =>
-              wrapWithMotion({
-                animations: assets[asset].animation,
-                idx: 0,
-                key: idx,
-                children: (
-                  <motion.img
-                    key={idx}
-                    src={datas[assets[asset].content]}
-                    style={{
-                      position: 'absolute',
-                      aspectRatio: '1 / 1',
-                      objectFit: 'contain',
-                      width: assets[asset].size,
-                      left: assets[asset].x,
-                      top: assets[asset].y,
-                    }}
-                  />
-                ),
-              }),
-            )}
+            {animation &&
+              sections[id].assets.map((asset, idx) =>
+                wrapWithMotion({
+                  animations: assets[asset].animation,
+                  idx: 0,
+                  key: idx,
+                  children: (
+                    <motion.img
+                      key={idx}
+                      src={datas[assets[asset].content]}
+                      style={{
+                        position: 'absolute',
+                        aspectRatio: '1 / 1',
+                        objectFit: 'contain',
+                        width: assets[asset].size,
+                        left: assets[asset].x,
+                        top: assets[asset].y,
+                      }}
+                    />
+                  ),
+                }),
+              )}
+
+            {!animation &&
+              sections[id].assets.map((asset, idx) => (
+                <motion.img
+                  key={idx}
+                  src={datas[assets[asset].content]}
+                  style={{
+                    position: 'absolute',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'contain',
+                    width: assets[asset].size,
+                    left: assets[asset].x,
+                    top: assets[asset].y,
+                  }}
+                />
+              ))}
           </div>
         </div>
       </shadow.div>

@@ -16,7 +16,7 @@ import { useAssetsStore } from './stores/assets'
 import { Button } from './components/ui/button'
 import { usePageSettingStore } from './stores/pageSetting'
 import { exportStores, importStores } from './utils/fileSave'
-import { exportPDF } from './utils/exportPDF'
+import { exportIMAGES } from './utils/exportIMAGES'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MdAnimation, MdOutlineDelete, MdOutlineContentCopy, MdAddCircleOutline, MdDownloading } from 'react-icons/md'
@@ -27,7 +27,7 @@ export default function App() {
   const AssetsStore = useAssetsStore()
   const { sectionsList, activeSection, activeTab, setSectionsList, setActiveSection, setActiveTab, addFile, addSection, copySection, removeSection, removeAsset } =
     usePageSettingStore()
-  const [isExportingPDF, setIsExportingPDF] = useState(false)
+  const [isExportingIMAGES, setIsExportingIMAGES] = useState(false)
   const [activeAnimationTab, setActiveAnimationTab] = useState('animation-0')
 
   const handleSectionListDragEnd = (result: DropResult) => {
@@ -61,7 +61,7 @@ export default function App() {
     <div className="flex flex-col h-dvh">
       {/* 미리보기 섹션 */}
       <div className="aspect-video">
-        <Viewer id={activeSection} width={window.innerWidth} />
+        <Viewer id={activeSection} width={window.innerWidth} animation />
       </div>
 
       {/* 마크다운 편집기 */}
@@ -349,17 +349,17 @@ export default function App() {
                         </div>
                         <div className="grid gap-2">
                           <Label className="grid grid-cols-3 items-center gap-4">
-                            Export to PDF
+                            Export to IMAGES
                             <Button
-                              disabled={isExportingPDF}
+                              disabled={isExportingIMAGES}
                               onClick={async () => {
-                                setIsExportingPDF(true)
-                                await exportPDF()
-                                setIsExportingPDF(false)
+                                setIsExportingIMAGES(true)
+                                await exportIMAGES()
+                                setIsExportingIMAGES(false)
                               }}
                               className="col-span-2 h-8"
                             >
-                              {isExportingPDF ? <MdDownloading /> : 'click!'}
+                              {isExportingIMAGES ? <MdDownloading /> : 'click!'}
                             </Button>
                           </Label>
                         </div>

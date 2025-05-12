@@ -26,7 +26,7 @@ export default function Presentation() {
         <CarouselContent>
           {sectionsList.map((id, idx) => (
             <CarouselItem key={idx}>
-              <Viewer id={id} width={window.innerWidth} />
+              <Viewer id={id} width={window.innerWidth} animation />
             </CarouselItem>
           ))}
         </CarouselContent>
